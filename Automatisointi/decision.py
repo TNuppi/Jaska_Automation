@@ -116,6 +116,9 @@ def handle_drive_distance(perception):
     if perception.obstacle_near:
         robot_state.update_state(motion="WAIT")
         return stop()
+    if perception.obstacle_front:
+        robot_state.update_state(motion="SLOW_FORWARD")
+        return drive_slow_forward()
     robot_state.add_distance_travelled(perception.measured_velocity * 0.1)
     return drive_forward()
 

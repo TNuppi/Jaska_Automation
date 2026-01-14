@@ -1,0 +1,46 @@
+
+"""
+RobotConfig.py
+Luonut Tero Nikkola luotu yhdessä Chat gpt:n kanssa
+
+Sisältää kaikki robotin parametrit ja raja-arvot, jotka eivät muutu ajon aikana.
+"""
+from math import pi
+# yleisiä muuttujia
+
+CONTROL_LOOP_DT = 0.1
+# Ohjelman testaus generoidulla anturi arvoilla
+USE_SIMULATION = True
+
+# testi muuttujia joilla voidaan aktivoida laitteita ja testata ohjelmaa jos joitain laitetta ei ole käytössä
+MODBUS_AVAILABLE = True
+IMU_AVABLE = False
+CAMERA_AVABLE = False
+
+# Renkaan koko metreinä
+WHEEL_DIAMETER = 0.26  # m
+
+
+# Esteiden havaitsemisen minimi-etäisyys
+OBSTACLE_MIN_DISTANCE = 300  # mm
+OBSTACLE_NEAR_DISTANCE = 800 # mm
+# Ohjausparametrit
+
+DEFAULT_LINEAR_SPEED = 0.5  # m/s
+DEFAULT_ANGULAR_SPEED = 1.0  # rad/s
+
+
+#moottorin speksit
+MOTOR_IDS = [1,3,4,6]
+POLES = 30 # moottorin navat
+POLE_PARES = POLES/2 #napa parit
+RPM_FACTOR = 60 /POLE_PARES 
+MAX_PULSES = 165 # moottorin ohjaimen antama maxsimi pulssi arvo
+
+# Maksimi kierros nopeus laskettu
+MAX_RPS = MAX_PULSES/POLE_PARES
+MAX_RPM = MAX_RPS*60
+# Maksimi nopeus (lineaarinen)
+MAX_LINEAR_SPEED = pi*WHEEL_DIAMETER*MAX_RPS  # m/s laskettu
+MAX_ANGULAR_SPEED = 3.14  # rad/s arvioitu
+MAX_SPEED_VALUE = 1000 # Moottori ohjaimelle annettava max nopeus ohje [0-1000]

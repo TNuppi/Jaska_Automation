@@ -1,7 +1,7 @@
 import logging
 from robot_types import PerceptionData, ControlCommand
 from robot_config import DEFAULT_LINEAR_SPEED, DEFAULT_ANGULAR_SPEED
-from state import robot_state
+from state import get_state, update_state,get_distance_info, add_distance_travelled
 logger = logging.getLogger(__name__)
 
 # ----------------- HELPER FUNKTIOT -----------------
@@ -26,13 +26,13 @@ def turn_right() -> ControlCommand:
 def turn() -> ControlCommand:
     return ControlCommand(linear_speed=DEFAULT_LINEAR_SPEED * 0.5, angular_speed=DEFAULT_ANGULAR_SPEED)
 
-# ----------------- PÄÄFUNKTI -----------------
+# ----------------- PÄÄFUNKTIO -----------------
 def decide(perception: PerceptionData) -> ControlCommand:
     """
     Päätöksenteko robottiohjaukseen.
     Käyttää suoraan singleton robot_state.
     """
-    state = robot_state.get_state()
+    state = get_state()
     
     # --- MANUAL TILA ---
     if state.control_type == "MAN":
@@ -46,6 +46,8 @@ def decide(perception: PerceptionData) -> ControlCommand:
             return handle_manual_turn_right(perception)
         if state.motion == "STOP":
             return stop()
+    if state.control_type == "ERROR":
+        return handle_error()
 
     # --- AUTO TILA ---
     else:
@@ -64,15 +66,18 @@ def decide(perception: PerceptionData) -> ControlCommand:
 
     # Tuntematon tila -> pysäytä
     logger.error(f"Unknown state: {state.motion}, stopping")
-    robot_state.update_state(motion="STOP")
+    update_state(control_type="ERROR")
     return stop()
 
 # ----------------- MANUAL HANDLERS -----------------
+def handle_error() -> ControlCommand:
+    logger.error("In ERROR state, stopping robot")
+    return stop()
 def handle_manual_forward(perception):
-    if perception.obstacle_near:
-        return stop()
-    if perception.obstacle_front:
-        return drive_slow_forward()
+    # if perception.obstacle_near:
+    #     return stop()
+    # if perception.obstacle_front:
+    #     return drive_slow_forward()
     return drive_forward()
 
 def handle_manual_backward(perception):
@@ -87,48 +92,71 @@ def handle_manual_turn_right(perception):
 # ----------------- AUTO HANDLERS -----------------
 def handle_forward(perception):
     if perception.obstacle_near:
-        robot_state.update_state(motion="WAIT")
+        update_state(motion="WAIT")
         return stop()
     if perception.obstacle_front:
-        robot_state.update_state(motion="SLOW_FORWARD")
+        update_state(motion="SLOW_FORWARD")
         return drive_slow_forward()
     return drive_forward()
 
 def handle_slow_forward(perception):
     if perception.obstacle_near:
-        robot_state.update_state(motion="WAIT")
+        update_state(motion="WAIT")
         return stop()
     if not perception.obstacle_front:
-        robot_state.update_state(motion="FORWARD")
+        update_state(motion="FORWARD")
         return drive_forward()
     return drive_slow_forward()
 
 def handle_drive_distance(perception):
-    start, target = robot_state.get_distance_info()
-    state = robot_state.get_state()
+    start, target = get_distance_info()
+    state = get_state()
     if start is None or target is None:
-        robot_state.update_state(motion="STOP")
+        update_state(motion="STOP")
         return stop()
     travelled = state.distance_travelled - start
     if travelled >= target:
-        robot_state.update_state(motion="STOP", start_distance=None, target_distance=None)
+        update_state(motion="STOP", start_distance=None, target_distance=None)
         return stop()
     if perception.obstacle_near:
-        robot_state.update_state(motion="WAIT")
+        update_state(motion="WAIT")
         return stop()
     if perception.obstacle_front:
-        robot_state.update_state(motion="SLOW_FORWARD")
+        update_state(motion="SLOW_FORWARD")
         return drive_slow_forward()
-    robot_state.add_distance_travelled(perception.measured_velocity * 0.1)
+    add_distance_travelled(perception.measured_velocity * 0.1)
     return drive_forward()
 
 def handle_wait(perception):
     if perception.obstacle_near:
         return stop()
-    state = robot_state.get_state()
+    state = get_state()
     previous_motion = state.last_motion or "FORWARD"
-    robot_state.update_state(motion=previous_motion)
+    update_state(motion=previous_motion)
     if previous_motion == "FORWARD": return drive_forward()
     if previous_motion == "SLOW_FORWARD": return drive_slow_forward()
     if previous_motion == "AVOIDING": return turn()
     return drive_forward()
+
+# ----------------- GUI HELPERS -----------------
+def gui_set_manual():
+    logger.info("GUI requested MANUAL mode")
+    update_state(control_type="MAN", motion="STOP")
+def gui_set_auto():
+    logger.info("GUI requested AUTO mode")
+    update_state(control_type="AUTO", motion="STOP")
+def gui_request_stop():
+    logger.info("GUI requested STOP")
+    update_state(motion="STOP")
+def gui_man_forward():
+    logger.info("GUI requested MAN_FORWARD")
+    update_state(motion="MAN_FORWARD")
+def gui_man_backward():
+    logger.info("GUI requested MAN_BACKWARD")
+    update_state(motion="MAN_BACKWARD") 
+def gui_man_left():
+    logger.info("GUI requested  MAN_LEFT")
+    update_state(motion="MAN_LEFT")
+def gui_man_right():
+    logger.info("GUI requested MAN_RIGHT")
+    update_state(motion="MAN_RIGHT")

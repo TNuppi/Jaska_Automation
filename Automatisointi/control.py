@@ -8,7 +8,7 @@ from robot_config import (
 )
 from modbus_worker import modbus_worker
 import logging
-from state import _tila
+
 
 logger = logging.getLogger(__name__)
 
@@ -94,10 +94,4 @@ def emergency_stop():
         logger.warning("Emergency stop executed")
     except Exception:
         logger.exception("Failed to execute emergency stop")
-def testi_man():
-    global _tila
-    _tila = "MAN"
-    
-def testi_auto():
-        global _tila
-        _tila = "AUTO"
+

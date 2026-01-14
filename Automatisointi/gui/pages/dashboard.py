@@ -1,5 +1,5 @@
 from nicegui import ui
-from state import robot_state
+from state import get_state, get_perception
 import math
 
 def page():
@@ -12,8 +12,8 @@ def page():
     obstacle_label = ui.label("Obstacle front / near: ---")
 
     def refresh():
-        state = robot_state.get_state()
-        perception = robot_state.get_perception()
+        state = get_state()
+        perception = get_perception()
 
         control_type_label.set_text(f"Control: {state.control_type}")
         motion_label.set_text(f"Motion: {state.motion}")

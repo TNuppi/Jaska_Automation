@@ -26,8 +26,6 @@ OBSTACLE_MIN_DISTANCE = 300  # mm
 OBSTACLE_NEAR_DISTANCE = 800 # mm
 # Ohjausparametrit
 
-DEFAULT_LINEAR_SPEED = 0.5  # m/s
-DEFAULT_ANGULAR_SPEED = 1.0  # rad/s
 
 
 #moottorin speksit
@@ -44,3 +42,6 @@ MAX_RPM = MAX_RPS*60
 MAX_LINEAR_SPEED = pi*WHEEL_DIAMETER*MAX_RPS  # m/s laskettu
 MAX_ANGULAR_SPEED = 3.14  # rad/s arvioitu
 MAX_SPEED_VALUE = 1000 # Moottori ohjaimelle annettava max nopeus ohje [0-1000]
+
+DEFAULT_LINEAR_SPEED = MAX_LINEAR_SPEED*0.5  # m/s
+DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.5  # rad/s

@@ -1,7 +1,12 @@
 # modbus_worker.py
+import logging
 import threading
 import time
 from robot_config import MOTOR_IDS
+from ModbusDriver import modbus
+
+
+logger = logging.getLogger(__name__)
 
 class ModbusWorker(threading.Thread):
     def __init__(self, poll_interval=0.1):
@@ -17,7 +22,10 @@ class ModbusWorker(threading.Thread):
             for mid in MOTOR_IDS:
                 # TODO: lue oikea Modbus täältä
                 with self.lock:
-                    self.motor_status[mid]["frequency_Hz"] = 0
+                    data = modbus.read_status(mid)
+                    if data:
+                        self.motor_status[mid] = data
+                    
             time.sleep(self.poll_interval)
 
     def stop(self):
@@ -28,14 +36,14 @@ class ModbusWorker(threading.Thread):
             return self.motor_status.get(motor_id, None)
 
     def set_speed(self, motor_id, speed):
-        print(f"Motor {motor_id}: speed set to {speed}")
+        logger.debug(f"Setting motor {motor_id} speed to {speed}")
+        modbus.set_speed(motor_id, speed)
 
     def set_direction(self, motor_id, direction):
-        print(f"Motor {motor_id}: direction set to {direction}")
-
+        modbus.set_direction(motor_id, direction)
+        logger.debug(f"Motor {motor_id}: direction set to {direction}")
     def emergency_stop(self):
-        self.set_direction(0, 0)
-        self.set_speed(0, 0)
-        
-
+        logger.info("Executing emergency stop on all motors")
+        modbus.emergency_stop()
+            
 modbus_worker = ModbusWorker()

@@ -2,7 +2,7 @@
 from nicegui import ui
 import logging
 from control import apply_control
-from state import robot_state
+from state import request_stop
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def start_gui():
             ui.button('STOP PROGRAM', color='orange', on_click=stop_dialog)
 
     def emergency_stop():
-        apply_control(None, emergency_stop=True)
+        apply_control(None)
         ui.notify("HÄTÄSTOP AKTIIVINEN")
         logger.warning("Emergency stop pressed")
 
@@ -36,8 +36,8 @@ def start_gui():
         dialog.open()
 
     def stop_program(dialog):
-        apply_control(None, emergency_stop=True)
-        robot_state.request_stop()
+        apply_control(None)
+        request_stop()
         dialog.close()
         ui.notify("Ohjelma pysäytetään")
         logger.info("Program stop requested")
@@ -73,4 +73,6 @@ def start_gui():
         from .pages.errors import page
         page()
 
+    logger.info("Starting GUI on http://localhost:8080")
     ui.run(title="Robot GUI", port=8080)
+    logger.info("GUI stopped")

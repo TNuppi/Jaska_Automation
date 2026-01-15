@@ -16,6 +16,7 @@ USE_SIMULATION = True
 MODBUS_AVAILABLE = True
 IMU_AVABLE = False
 CAMERA_AVABLE = False
+IO_AVABLE = False
 
 # Renkaan koko metreinä
 WHEEL_DIAMETER = 0.26  # m
@@ -44,4 +45,14 @@ MAX_ANGULAR_SPEED = 3.14  # rad/s arvioitu
 MAX_SPEED_VALUE = 1000 # Moottori ohjaimelle annettava max nopeus ohje [0-1000]
 
 DEFAULT_LINEAR_SPEED = MAX_LINEAR_SPEED*0.20  # m/s
-DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.20  # rad/s
+DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.5  # rad/s
+
+# Debug asetukset Jos haluat nähdä debug tietoa konsolissa, aseta arvo True
+DEBUG_SENSOR_VALUES = False  # Tulostetaanko anturi arvot konsoliin
+DEBUG_PERCEPTION = False  # Tulostetaanko havaitut tilat konsoliin
+DEBUG_CONTROL_COMMANDS = False  # Tulostetaanko ohjaus käskyt konsoliin 
+DEBUG_STATE_CHANGES = False  # Tulostetaanko tilamuutokset konsoliin    
+DEBUG_DECISIONS = False  # Tulostetaanko päätökset konsoliin
+DEBUG_MODBUS = False  # Tulostetaanko Modbus viestit konsoliin
+DEBUG_CONTOL_LOOP = False  # Tulostetaanko ohjaus silmukan suoritukset konsoliin
+DEBUG_DASHBOARD = False  # Tulostetaanko dashboardin päivitykset konsoliin

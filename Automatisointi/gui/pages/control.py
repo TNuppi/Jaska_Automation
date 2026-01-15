@@ -1,6 +1,6 @@
 # gui/pages/control.py
 from nicegui import ui
-from state import update_state, get_state
+from state import update_state, get_state, get_perception
 import decision
 import logging
 
@@ -49,8 +49,16 @@ def page():
         btn.on('pointercancel', lambda _: decision.gui_request_stop())
 
         return btn
+    
 
-
+    # ===============================
+    # TILAN NÄYTTÖ
+    # ===============================
+    state_label = ui.label().classes('mt-6 font-mono')
+    velocity_label = ui.label().classes('font-mono')
+    # ===============================
+    # NAPIT
+    # ===============================
     with ui.column().classes('items-center gap-4 touch-none'):
         man_button('⬆ Forward', decision.gui_man_forward)
 
@@ -62,14 +70,14 @@ def page():
        
 
 
-    # ===============================
-    # TILAN NÄYTTÖ
-    # ===============================
-    state_label = ui.label().classes('mt-6 font-mono')
 
+#    # ===============================
+#    # TILAN PÄIVITYS
+#    # ===============================
     def refresh_label():
         state = get_state()
         state_label.text = f"Control: {state.control_type} | Motion: {state.motion}"
+        velocity_label.text = f"Velocity: {get_perception().measured_velocity:.2f} m/s" if get_perception() else "Velocity: --- m/s"
 
         # Päivitä kytkin jos tila muuttuu muualla
         mode_switch.value = (state.control_type == "MAN")

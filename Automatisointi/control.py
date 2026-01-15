@@ -66,8 +66,8 @@ def send_to_motors(motor_vals: dict[int, int]):
             direction, speed = speed_to_direction(signed_speed)
 
             if MODBUS_AVAILABLE:
-                modbus_worker.set_direction(motor_id, direction)
-                modbus_worker.set_speed(motor_id, speed)
+                modbus_worker.enqueue_set_direction(motor_id, direction)
+                modbus_worker.enqueue_set_speed(motor_id, speed)
             else:
                 logger.info(
                     f"[SIM] Motor {motor_id}: speed={speed}, direction={direction}"

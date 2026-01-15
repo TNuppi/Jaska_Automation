@@ -8,7 +8,7 @@ import signal
 from sensors import read_sensors
 from perception import perceive
 from decision import decide
-from control import apply_control, emergency_stop
+from control import apply_control, emergency_stop,stop_all_motors
 from gui import start_gui
 from robot_config import CONTROL_LOOP_DT
 
@@ -33,19 +33,17 @@ def control_loop():
             sensors = read_sensors()
             perception = perceive(sensors)
             command = decide(perception)
-
-            if command is not None:
-                apply_control(command)
-            else:
-                emergency_stop()
+            apply_control(command)
+            
+                
 
         except Exception:
             logger.exception("CONTROL LOOP ERROR")
-            emergency_stop()
+            stop_all_motors()
 
         time.sleep(CONTROL_LOOP_DT)
 
-    emergency_stop()
+    stop_all_motors()
     logger.info("Control loop stopped")
 
 

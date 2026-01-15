@@ -46,7 +46,7 @@ def decide(perception: PerceptionData) -> ControlCommand:
             return handle_manual_turn_right(perception)
         if state.motion == "STOP":
             return stop()
-    if state.control_type == "ERROR":
+    elif state.control_type == "ERROR":
         return handle_error()
 
     # --- AUTO TILA ---
@@ -69,15 +69,17 @@ def decide(perception: PerceptionData) -> ControlCommand:
     update_state(control_type="ERROR")
     return stop()
 
-# ----------------- MANUAL HANDLERS -----------------
+# ----------------- ERROR HANDLER -----------------
 def handle_error() -> ControlCommand:
     logger.error("In ERROR state, stopping robot")
     return stop()
+
+# ----------------- MANUAL HANDLERS -----------------
 def handle_manual_forward(perception):
-    # if perception.obstacle_near:
-    #     return stop()
-    # if perception.obstacle_front:
-    #     return drive_slow_forward()
+    if perception.obstacle_near:
+        return stop()
+    if perception.obstacle_front:
+        return drive_slow_forward()
     return drive_forward()
 
 def handle_manual_backward(perception):

@@ -23,7 +23,9 @@ def apply_control(command: ControlCommand | None):
     global _last_command
 
     if command is None:
-        logger.debug("apply_control: command is None -> skip")
+        logger.debug("apply_control: command is None -> all motors stop")
+        modbus_worker.stop_all()
+        _last_command = None
         return
 
     # Sama käsky kuin viimeksi -> ei tehdä mitään
@@ -95,3 +97,13 @@ def emergency_stop():
     except Exception:
         logger.exception("Failed to execute emergency stop")
 
+def stop_all_motors():
+    """
+    Pysäyttää kaikki moottorit.
+    """
+    try:
+        if MODBUS_AVAILABLE:
+            modbus_worker.stop_all()
+        logger.info("All motors stopped")
+    except Exception:
+        logger.exception("Failed to stop all motors")

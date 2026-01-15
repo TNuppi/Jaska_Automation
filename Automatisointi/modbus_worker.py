@@ -28,8 +28,11 @@ class ModbusWorker(threading.Thread):
                     
             time.sleep(self.poll_interval)
 
-    def stop(self):
+    def stop_all(self):
         self.running = False
+        modbus.set_direction(0, 0)  # asettaa kakkien moottorien pyrimissuunnan eteen
+        modbus.set_speed(0, 0)      # pysäyttää kaikki moottorit
+        logger.info("All motors stopped")
 
     def get_status(self, motor_id):
         with self.lock:

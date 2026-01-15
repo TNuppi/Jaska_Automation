@@ -1,5 +1,5 @@
 # gui/app.py
-from nicegui import ui
+from nicegui import ui, app
 import logging
 from control import apply_control
 from state import request_stop
@@ -41,6 +41,7 @@ def start_gui():
         dialog.close()
         ui.notify("Ohjelma pysäytetään")
         logger.info("Program stop requested")
+        app.shutdown()
 
     # 🔥 TÄRKEÄ: kaikki UI VAIN sivufunktioissa
     @ui.page('/')

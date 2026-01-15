@@ -14,12 +14,12 @@ class RobotStateData:
     distance_travelled: float = 0.0
     start_distance: Optional[float] = None
     target_distance: Optional[float] = None
-
+    perception: Optional[PerceptionData] = None
 
 # ----------------- MODUULI-TILA (SINGLETON) -----------------
 
 _state = RobotStateData()
-_perception: Optional[PerceptionData] = None
+
 _lock = Lock()
 
 
@@ -43,13 +43,13 @@ def update_state(**kwargs):
 
 def get_perception() -> Optional[PerceptionData]:
     with _lock:
-        return _perception
+        return _state.perception
 
 
 def update_perception(perception: PerceptionData):
-    global _perception
+
     with _lock:
-        _perception = perception
+        _state.perception = perception
 
 
 # ----------------- MODE HELPERS -----------------

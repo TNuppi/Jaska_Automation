@@ -1,11 +1,13 @@
 # sensors.py
 from robot_types import SensorData
-from robot_config import CAMERA_AVABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE
+from robot_config import CAMERA_AVABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
 from modbus_worker import modbus_worker
 import requests
 import logging
 
+
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 
 def read_camera_depth():
     if not CAMERA_AVABLE:
@@ -27,12 +29,20 @@ def safe_motor_freq(motor_id):
     if not MODBUS_AVAILABLE:
         return None
     data = modbus_worker.get_status(motor_id)
+    logger.debug(f"Motor {motor_id} frequency: {data.get('frequency_Hz') if data else 'N/A'}")
+
     return data.get("frequency_Hz") if data else None
-def safe_motor_voltage(motor_id):
+
+def safe_motor_voltage(motor_id: int) -> float | None:
+    """Palauttaa moottorin jännitteen tai None, jos dataa ei ole saatavilla."""
     if not MODBUS_AVAILABLE:
         return None
+
     data = modbus_worker.get_status(motor_id)
-    return data.get("voltage_V") if data else None
+    voltage = data.get("voltage_V") if data else None
+    logger.debug(f"Motor {motor_id} voltage: {voltage if voltage is not None else 'N/A'}")
+    return voltage
+
 
 def read_IO_data():
     if not IO_AVABLE:
@@ -55,8 +65,8 @@ def read_sensors() -> SensorData:
         motor3_measured_freq=motor3_freg,
         motor4_measured_freq=motor4_freg,
         motor6_measured_freq=motor6_freg,
-        battery1_voltage_V=battery1_voltage,
-        battery2_voltage_V=battery2_voltage,
+        battery1_voltage=battery1_voltage,
+        battery2_voltage=battery2_voltage,
         cam_measured_depth_left=cam_left,
         cam_measured_depth_center=cam_center,
         cam_measured_depth_right=cam_right,

@@ -16,6 +16,7 @@ USE_SIMULATION = True
 MODBUS_AVAILABLE = True
 IMU_AVABLE = False
 CAMERA_AVABLE = False
+IO_AVABLE = False
 
 # Renkaan koko metreinä
 WHEEL_DIAMETER = 0.26  # m
@@ -44,4 +45,4 @@ MAX_ANGULAR_SPEED = 3.14  # rad/s arvioitu
 MAX_SPEED_VALUE = 1000 # Moottori ohjaimelle annettava max nopeus ohje [0-1000]
 
 DEFAULT_LINEAR_SPEED = MAX_LINEAR_SPEED*0.20  # m/s
-DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.20  # rad/s
+DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.5  # rad/s

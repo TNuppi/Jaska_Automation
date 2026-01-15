@@ -15,7 +15,7 @@ from modbus_worker import modbus_worker
 from state import update_perception
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    
     format='%(asctime)s [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger("MAIN")

@@ -2,11 +2,11 @@
 import logging
 import threading
 import time
-from robot_config import MOTOR_IDS
+from robot_config import MOTOR_IDS, DEBUG_MODBUS
 from ModbusDriver import modbus
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel(logging.DEBUG if DEBUG_MODBUS else logging.INFO)
 class ModbusWorker(threading.Thread):
     def __init__(self, poll_interval=0.1):
         super().__init__(daemon=True)

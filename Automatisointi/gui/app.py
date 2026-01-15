@@ -75,5 +75,5 @@ def start_gui():
         page()
 
     logger.info("Starting GUI on http://localhost:8080")
-    ui.run(title="Robot GUI", port=8080)
+    ui.run(title="Robot GUI", port=8080 ,reload=False)
     logger.info("GUI stopped")

@@ -37,11 +37,14 @@ def perceive(sensor_data: SensorData) -> PerceptionData:
 
     obstacle_front, obstacle_near = detect_obstacles(sensor_data)
 
+    io_data = read_IO_states(sensor_data)
     return PerceptionData(
         obstacle_near=obstacle_near,
         obstacle_front=obstacle_front,
         heading=heading,
         measured_velocity=velocity,
+        emmergency_stop=io_data["emmergency_stop"],
+        reset_button=io_data["reset_button"],
     )
 
 
@@ -129,6 +132,19 @@ def detect_obstacles(sensor_data) -> tuple[bool, bool]:
 
     return obstacle_front, obstacle_near
 
+# --- IO käsittely ---
+def read_IO_states(sensor_data: SensorData) -> dict[str, int]:
+    """
+    Lukee IO-dataa SensorData-oliosta.
+    """
+    emmergency_stop = True if sensor_data.IO_data_1 == 1 else False
+    reset_button = True if sensor_data.IO_data_2 == 1 else False
+    return {
+        "emmergency_stop": emmergency_stop,
+        "reset_button": reset_button,
+    }
+
+# --- TESTAUSKODI ---
 if __name__ == "__main__":
     from sensors import read_sensors
     sensors = read_sensors()

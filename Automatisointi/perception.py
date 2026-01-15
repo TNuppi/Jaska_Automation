@@ -18,12 +18,13 @@ from robot_config import (
     OBSTACLE_MIN_DISTANCE,
     OBSTACLE_NEAR_DISTANCE,
     RPM_FACTOR,
+    DEBUG_PERCEPTION
 )
 import math
 import logging
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel(logging.DEBUG if DEBUG_PERCEPTION else logging.INFO)
 
 # ---------- PÄÄRAJAPINTA ----------
 
@@ -32,20 +33,29 @@ def perceive(sensor_data: SensorData) -> PerceptionData:
     Muuntaa SensorData-olion PerceptionData-olioksi.
     """
     rpms = calculate_motor_rpms(sensor_data)
+    logger.debug(f"Motor RPMs: {rpms}")
     velocity = calculate_linear_velocity(rpms)
+    logger.debug(f"Calculated linear velocity: {velocity} m/s")
     heading = calculate_heading(sensor_data)
-
+    logger.debug(f"Calculated heading: {heading} rad")
     obstacle_front, obstacle_near = detect_obstacles(sensor_data)
-
+    logger.debug(f"Obstacle front: {obstacle_front}, Obstacle near: {obstacle_near}")
+    battery1 = sensor_data.battery1_voltage
+    battery2 = sensor_data.battery2_voltage
+    logger.debug(f"Battery1 voltage: {battery1} V, Battery2 voltage: {battery2} V")
     io_data = read_IO_states(sensor_data)
-    return PerceptionData(
+    perception = PerceptionData(
         obstacle_near=obstacle_near,
         obstacle_front=obstacle_front,
         heading=heading,
         measured_velocity=velocity,
         emmergency_stop=io_data["emmergency_stop"],
         reset_button=io_data["reset_button"],
+        battery1=battery1,
+        battery2=battery2
     )
+    
+    return perception
 
 
 # ---------- ALIFUNKTIOT ----------

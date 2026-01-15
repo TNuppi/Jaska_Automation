@@ -16,8 +16,8 @@ class SensorData:
     motor4_measured_freq: float | None # Etu Styyrpuuri
     motor6_measured_freq: float | None # Taka Styyrpuuri
 
-    battery1_voltage_V: float | None  # Akun 1 jännite
-    battery2_voltage_V: float | None  # Akun 2 jännite 
+    battery1_voltage: float | None  # Akun 1 jännite
+    battery2_voltage: float | None  # Akun 2 jännite 
 
     cam_measured_depth_left: float | None  # kameran mittaama etäisyys vasen
     cam_measured_depth_center: float | None # kameran mittaama etäisyys keskellä
@@ -42,6 +42,8 @@ class PerceptionData:
     obstacle_front: bool # Este edessä
     heading: float # Suuntima
     measured_velocity: float # sensoridatasta lakettu
+    battery1: float | None # Akun 1 jännite
+    battery2: float | None # Akun 2 jännite
     emmergency_stop: bool # Hätä seis tila
     reset_button: bool # Reset nappi painettu
     # TODO: lisää mahdollisia juttuja

@@ -8,9 +8,11 @@ import signal
 from sensors import read_sensors
 from perception import perceive
 from decision import decide
-from control import apply_control, emergency_stop,stop_all_motors
+from control import apply_control, stop_all_motors
 from gui import start_gui
 from robot_config import CONTROL_LOOP_DT
+from modbus_worker import modbus_worker
+from state import update_perception
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -32,10 +34,11 @@ def control_loop():
         try:
             sensors = read_sensors()
             perception = perceive(sensors)
+
+            update_perception(perception)
+
             command = decide(perception)
             apply_control(command)
-            
-                
 
         except Exception:
             logger.exception("CONTROL LOOP ERROR")
@@ -53,19 +56,23 @@ def shutdown_handler(signum, frame):
 
 
 def main():
-    logger.info(f"NICEGUI_PROCESS={os.environ.get('NICEGUI_PROCESS')}")
+    nicegui_process = os.environ.get("NICEGUI_PROCESS")
+    logger.info(f"NICEGUI_PROCESS={nicegui_process}")
 
     signal.signal(signal.SIGINT, shutdown_handler)
     signal.signal(signal.SIGTERM, shutdown_handler)
 
     if is_nicegui_reload_process():
-        logger.info("NiceGUI reload/helper process – control loop NOT started")
+        logger.info("NiceGUI reload/helper process – NO hardware threads started")
     else:
         logger.info("Starting control loop thread")
         threading.Thread(target=control_loop, daemon=True).start()
 
+        logger.info("Starting Modbus worker thread")
+        modbus_worker.start()
+
     logger.info("Starting GUI")
-    start_gui()  # 🔥 EI finally-lohkoa
+    start_gui()   # ui.run() BLOKKAA TÄSSÄ
 
 
 if __name__ in {"__main__", "__mp_main__"}:

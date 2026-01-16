@@ -91,10 +91,6 @@ def add_distance_travelled(distance: float):
     with _lock:
         _state.distance_travelled += distance
 
-def calculate_distance_travelled(velocity: float, time_delta: float) -> float:
-    """Laskee kuljetun matkan annetulla nopeudella ja aikavälillä."""
-    return velocity * time_delta
-
 def reset_distance_travelled():
     """Nollaa kuljetun matkan. ja viime aijan"""
     global _last_time

@@ -3,6 +3,11 @@ from dataclasses import dataclass
 from threading import Lock
 from typing import Optional
 from robot_types import PerceptionData
+import logging
+import time
+
+_last_time = None
+logger = logging.getLogger(__name__)
 
 # ----------------- DATA -----------------
 
@@ -85,5 +90,28 @@ def get_distance_info():
 def add_distance_travelled(distance: float):
     with _lock:
         _state.distance_travelled += distance
+
+def calculate_distance_travelled(velocity: float, time_delta: float) -> float:
+    """Laskee kuljetun matkan annetulla nopeudella ja aikavälillä."""
+    return velocity * time_delta
+
+def reset_distance_travelled():
+    """Nollaa kuljetun matkan. ja viime aijan"""
+    global _last_time
+    with _lock:
+        _state.distance_travelled = 0.0
+        _last_time = None
+
+def calculate_time_delta() -> float:
+    """Laskee kuluneen ajan edellisestä kutsusta sekunteina."""
+    global _last_time
+    now = time.monotonic()
+    if _last_time is None:
+        _last_time = now
+        return 0.0
+    delta = now - _last_time
+    _last_time = now
+       # turvaraja esim. GUI freeze / breakpoint
+    return min(delta, 0.5)
 
 

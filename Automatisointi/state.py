@@ -12,7 +12,7 @@ class RobotStateData:
     motion: str = "STOP"
     last_motion: Optional[str] = None
     distance_travelled: float = 0.0
-    start_distance: Optional[float] = None
+    start_distance: float = 0.0
     target_distance: Optional[float] = None
     perception: Optional[PerceptionData] = None
 
@@ -82,6 +82,8 @@ def get_distance_info():
         return _state.start_distance, _state.target_distance
 
 
-def add_distance_travelled(delta: float):
+def add_distance_travelled(distance: float):
     with _lock:
-        _state.distance_travelled += delta
+        _state.distance_travelled += distance
+
+

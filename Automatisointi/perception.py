@@ -44,6 +44,8 @@ def perceive(sensor_data: SensorData) -> PerceptionData:
     battery2 = sensor_data.battery2_voltage
     logger.debug(f"Battery1 voltage: {battery1} V, Battery2 voltage: {battery2} V")
     io_data = read_IO_states(sensor_data)
+
+
     perception = PerceptionData(
         obstacle_near=obstacle_near,
         obstacle_front=obstacle_front,
@@ -59,6 +61,8 @@ def perceive(sensor_data: SensorData) -> PerceptionData:
 
 
 # ---------- ALIFUNKTIOT ----------
+
+# --- Moottorien kierrosnopeudet (RPM) ---
 
 def calculate_motor_rpms(sensor_data: SensorData) -> dict:
     motor_freqs = [
@@ -77,6 +81,10 @@ def calculate_motor_rpms(sensor_data: SensorData) -> dict:
         motor_rpms[name] = freq * RPM_FACTOR
 
     return motor_rpms
+
+
+# --- Lineaarinen nopeus ---
+
 def calculate_linear_velocity(motor_rpms: dict[str,float]) -> float:
     """
     Laskee robotin lineaarisen nopeuden (m/s)

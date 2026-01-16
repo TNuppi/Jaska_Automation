@@ -48,6 +48,7 @@ DEFAULT_LINEAR_SPEED = MAX_LINEAR_SPEED*0.20  # m/s
 DEFAULT_ANGULAR_SPEED = MAX_ANGULAR_SPEED*0.5  # rad/s
 
 # Debug asetukset Jos haluat nähdä debug tietoa konsolissa, aseta arvo True
+DEBUG_MAIN = False  # Tulostetaanko main moduulin tiedot konsoliin
 DEBUG_SENSOR_VALUES = False  # Tulostetaanko anturi arvot konsoliin
 DEBUG_PERCEPTION = False  # Tulostetaanko havaitut tilat konsoliin
 DEBUG_CONTROL_COMMANDS = False  # Tulostetaanko ohjaus käskyt konsoliin 

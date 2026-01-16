@@ -84,7 +84,7 @@ def request_stop():
 
 def get_distance_info():
     with _lock:
-        return _state.start_distance, _state.target_distance
+        return _state.start_distance, _state.target_distance, _state.distance_travelled
 
 
 def add_distance_travelled(distance: float):
@@ -95,6 +95,7 @@ def reset_distance_travelled():
     """Nollaa kuljetun matkan. ja viime aijan"""
     global _last_time
     with _lock:
+        
         _state.distance_travelled = 0.0
         _last_time = None
 

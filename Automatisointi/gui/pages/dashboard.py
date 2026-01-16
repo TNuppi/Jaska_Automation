@@ -25,9 +25,10 @@ def page():
         with ui.card().classes("w-1/4 p-4"):
             ui.label("Obstacle")
             obstacle_label = ui.label("---")
+        
 
     # ===============================
-    # TOINEN RIVI: Speed / Heading
+    # TOINEN RIVI: Speed / Heading / BATTERY
     # ===============================
     with ui.row().classes("w-full gap-4 mt-4"):
 
@@ -51,6 +52,17 @@ def page():
                 with ui.card().classes("w-full p-2 bg-gray-50"):
                     battery2_label = ui.label("Battery 2: ---").classes("text-sm font-bold font-mono")
     # ===============================
+    # KOLMAS RIVI: distance jne.
+    # ===============================
+    with ui.row().classes("w-full gap-4 mt-4"):
+        
+        with ui.card().classes("w-1/4 p-4"):
+            ui.label("Travelled Distance (m)")
+            travellde_label = ui.label("0.0").classes("text-xl font-bold")
+
+    
+
+    # ===============================
     # Päivitysfunktio
     # ===============================
     def refresh():
@@ -60,6 +72,7 @@ def page():
         # --- State ---
         control_label.set_text(state.control_type)
         motion_label.set_text(state.motion)
+        travellde_label.set_text(f"{state.distance_travelled:.2f}")
 
         # --- Sensorit / perception ---
         if perception:

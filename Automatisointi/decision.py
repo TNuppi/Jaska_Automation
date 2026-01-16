@@ -111,22 +111,29 @@ def handle_slow_forward(perception):
     return drive_slow_forward()
 
 def handle_drive_distance(perception):
-    start, target = get_distance_info()
-    state = get_state()
-    if start is None or target is None:
+    start, target, travelled = get_distance_info()
+    
+    if target is None:
+        logger.error("Drive distance target is None, stopping")
         update_state(motion="STOP")
         return stop()
-    travelled = state.distance_travelled - start
+    
     if travelled >= target:
-        update_state(motion="STOP", start_distance=None, target_distance=None)
+        logger.info(f"Reached target distance: {travelled:.2f} m >= {target:.2f} m")
+        update_state(
+            motion="STOP",
+            start_distance=None, 
+            target_distance=None
+            )
         return stop()
+    
     if perception.obstacle_near:
         update_state(motion="WAIT")
         return stop()
+    
     if perception.obstacle_front:
-        update_state(motion="SLOW_FORWARD")
         return drive_slow_forward()
-    add_distance_travelled(perception.measured_velocity * 0.1)
+    
     return drive_forward()
 
 def handle_wait(perception):

@@ -55,12 +55,15 @@ class ControlCommand:
     # TODO: tarviiko lisää?
 
 @dataclass(frozen=True)
-class RobotState:
+class RobotStateData:
+    status: str # esim. ok, error
     control_type: str # MAN |AUTO
     motion: str # esim. "STOP", "FORWARD", "TURNING_LEFT"
     last_motion: str | None = None #edellinen tila 
     last_turn: str | None = None # "LEFT", "RIGHT" tai None
     
+    prev_reset_button: bool = False # edellinen reset nappi tila
+
     distance_travelled: float = 0.0 # kuljettu matka
     target_distance: float | None = None
     start_distance: float | None = None

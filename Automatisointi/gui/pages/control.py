@@ -126,16 +126,16 @@ def page():
         if state.motion == "DRIVE_DISTANCE" and state.target_distance is not None:
             # distance kuljettu suhteessa start_distanceen
             distance_done = state.distance_travelled - state.start_distance
-            progress_total = state.target_distance - state.start_distance
-        
+            progress_total = state.target_distance - state.distance_travelled
+
             # Suojaa nollalla, ettei jaeta nollalla
             if progress_total <= 0:
                 progress = 0
             else:
                 progress = max(0.0, min(distance_done / progress_total, 1.0))
-        
+
             progress_bar.value = progress
         else:
-            progress_bar.value = 0
+            pass
 
     ui.timer(0.2, refresh)

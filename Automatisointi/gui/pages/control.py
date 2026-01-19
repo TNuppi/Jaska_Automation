@@ -82,7 +82,7 @@ def page():
 
         ui.button('Start', on_click=start_drive_distance).classes('w-40')
         # --- Progress bar ---
-        progress_bar = ui.linear_progress().props('value=0').classes('w-80 mt-2')
+        progress_bar = ui.linear_progress(show_value=False,size="10px")
 
 
     # ===============================

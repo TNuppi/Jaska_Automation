@@ -80,7 +80,14 @@ def page():
             logger.info(f"Starting DRIVE_DISTANCE to {target:.2f} m")
             update_state(motion="DRIVE_DISTANCE", start_distance=0.0, target_distance=target)
 
-        ui.button('Start', on_click=start_drive_distance).classes('w-40')
+        def stop_drive_distance():
+            state = get_state()
+            logger.info("Stopping DRIVE_DISTANCE")
+            update_state(motion="STOP", start_distance=state.distance_travelled, target_distance=state.target_distance)
+        with ui.button_group():
+            ui.button('Start', color='green', on_click=start_drive_distance).classes('w-40')
+            ui.button('Stop', color='red', on_click=stop_drive_distance).classes('w-40')
+        
         # --- Progress bar ---
         progress_bar = ui.linear_progress(show_value=False,size="10px")
 

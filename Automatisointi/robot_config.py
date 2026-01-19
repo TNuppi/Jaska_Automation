@@ -56,4 +56,9 @@ DEBUG_STATE_CHANGES = False  # Tulostetaanko tilamuutokset konsoliin
 DEBUG_DECISIONS = False  # Tulostetaanko päätökset konsoliin
 DEBUG_MODBUS = False  # Tulostetaanko Modbus viestit konsoliin
 DEBUG_CONTOL_LOOP = False  # Tulostetaanko ohjaus silmukan suoritukset konsoliin
+# GUI Debug asetukset
+
+
+DEBUG_APP = False  # Tulostetaanko GUI sovelluksen tapahtumat konsoliin
 DEBUG_DASHBOARD = False  # Tulostetaanko dashboardin päivitykset konsoliin
+DEBUG_GUI_CONTROL = False  # Tulostetaanko GUI ohjaus tapahtumat konsoliin

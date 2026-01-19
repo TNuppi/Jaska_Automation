@@ -13,9 +13,15 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RobotStateData:
+    status: str = "OK"
+    last_status: Optional[str] = None
     control_type: str = "AUTO"
     motion: str = "STOP"
     last_motion: Optional[str] = None
+    last_turn: Optional[str] = None
+
+    prev_reset_button: bool = False
+    
     distance_travelled: float = 0.0
     start_distance: float = 0.0
     target_distance: Optional[float] = None

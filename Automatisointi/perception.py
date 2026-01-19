@@ -155,7 +155,7 @@ def read_IO_states(sensor_data: SensorData) -> dict[str, int]:
     """
     Lukee IO-dataa SensorData-oliosta.
     """
-    emmergency_stop = True if sensor_data.IO_data_1 == 1 else False
+    emmergency_stop = False if sensor_data.IO_data_1 == 1 else True
     reset_button = True if sensor_data.IO_data_2 == 1 else False
     return {
         "emmergency_stop": emmergency_stop,

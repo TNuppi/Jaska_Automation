@@ -123,8 +123,17 @@ def page():
         mode_switch.value = (state.control_type == "MAN")
 
                 # --- Progress bar update ---
-        if state.motion == "DRIVE_DISTANCE" and state.target_distance:
-            progress = min(state.distance_travelled / state.target_distance, 1.0)
+        if state.motion == "DRIVE_DISTANCE" and state.target_distance is not None:
+            # distance kuljettu suhteessa start_distanceen
+            distance_done = state.distance_travelled - state.start_distance
+            progress_total = state.target_distance - state.start_distance
+        
+            # Suojaa nollalla, ettei jaeta nollalla
+            if progress_total <= 0:
+                progress = 0
+            else:
+                progress = max(0.0, min(distance_done / progress_total, 1.0))
+        
             progress_bar.value = progress
         else:
             progress_bar.value = 0

@@ -1,8 +1,9 @@
 import logging
 from robot_types import PerceptionData, ControlCommand
-from robot_config import DEFAULT_LINEAR_SPEED, DEFAULT_ANGULAR_SPEED
+from robot_config import DEFAULT_LINEAR_SPEED, DEFAULT_ANGULAR_SPEED,DEBUG_DECISIONS
 from state import get_state, update_state,get_distance_info, add_distance_travelled
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if DEBUG_DECISIONS else logging.INFO)
 
 # ----------------- HELPER FUNKTIOT -----------------
 def stop() -> ControlCommand:
@@ -32,46 +33,79 @@ def decide(perception: PerceptionData) -> ControlCommand:
     Päätöksenteko robottiohjaukseen.
     Käyttää suoraan singleton robot_state.
     """
-    state = get_state()
+    robot_states = get_state()
+    emmergency_stop_button_S50 = perception.emmergency_stop
+    restebutton = perception.reset_button
+    prev_resetbutton = robot_states.prev_reset_button
+
+    # --- HÄTÄSEIS TARKISTUS ---
+    if emmergency_stop_button_S50:
+        logger.warning("Emergency stop (S50) activated!")
+        update_state(status="ERROR", motion="STOP")
+        return stop()
     
-    # --- MANUAL TILA ---
-    if state.control_type == "MAN":
-        if state.motion == "MAN_FORWARD":
-            return handle_manual_forward(perception)
-        if state.motion == "MAN_BACKWARD":
-            return handle_manual_backward(perception)
-        if state.motion == "MAN_LEFT":
-            return handle_manual_turn_left(perception)
-        if state.motion == "MAN_RIGHT":
-            return handle_manual_turn_right(perception)
-        if state.motion == "STOP":
-            return stop()
-    elif state.control_type == "ERROR":
+    # --- RESET NAPIN TARKISTUS ---
+    reset_edge = not prev_resetbutton and restebutton
+
+    # --- VIRHETILASTA OK TILAAN PALUU VAIN RESET NAPIN NOUSEVALLA REUNALLA ---
+    if robot_states.status == "ERROR" and not emmergency_stop_button_S50:
+        if reset_edge:
+            logger.info("Emergency stop released, returning to OK status")
+            update_state(status="OK")
+
+    
+    # --- VIRHETILA ---
+    if robot_states.status != "OK":
+        update_state(control_type="ERROR")
+        update_state(prev_reset_button=restebutton)
         return handle_error()
+    
+    # --- Virhe tilasta palautuminen ---
+    if robot_states.status == "OK":
+        if robot_states.last_status != "OK":
+            logger.info("Status OK")
+            update_state(control_type="MAN", motion="STOP")
+        update_state(last_status="OK")
+    # --- MANUAL TILA ---
+    if robot_states.control_type == "MAN":
+        if robot_states.motion == "MAN_FORWARD":
+            return handle_manual_forward(perception)
+        if robot_states.motion == "MAN_BACKWARD":
+            return handle_manual_backward(perception)
+        if robot_states.motion == "MAN_LEFT":
+            return handle_manual_turn_left(perception)
+        if robot_states.motion == "MAN_RIGHT":
+            return handle_manual_turn_right(perception)
+        if robot_states.motion == "STOP":
+            return stop()
+
 
     # --- AUTO TILA ---
     else:
-        if state.motion == "STOP":
+        if robot_states.motion == "STOP":
             return stop()
-        if state.motion == "FORWARD":
+        if robot_states.motion == "FORWARD":
             return handle_forward(perception)
-        if state.motion == "SLOW_FORWARD":
+        if robot_states.motion == "SLOW_FORWARD":
             return handle_slow_forward(perception)
-        if state.motion == "AVOIDING":
+        if robot_states.motion == "AVOIDING":
             return turn()
-        if state.motion == "DRIVE_DISTANCE":
+        if robot_states.motion == "DRIVE_DISTANCE":
             return handle_drive_distance(perception)
-        if state.motion == "WAIT":
+        if robot_states.motion == "WAIT":
             return handle_wait(perception)
 
     # Tuntematon tila -> pysäytä
-    logger.error(f"Unknown state: {state.motion}, stopping")
-    update_state(control_type="ERROR")
+    logger.error(f"Unknown state: {robot_states.motion}, stopping")
+    update_state(status="ERROR" ,motion="STOP")
     return stop()
 
 # ----------------- ERROR HANDLER -----------------
 def handle_error() -> ControlCommand:
-    logger.error("In ERROR state, stopping robot")
+    robot_states = get_state()
+    if robot_states.last_status != "ERROR":
+        logger.error("In ERROR state, stopping robot")
+        update_state(last_status="ERROR")
     return stop()
 
 # ----------------- MANUAL HANDLERS -----------------

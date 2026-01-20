@@ -77,27 +77,34 @@ def page():
             except (ValueError, TypeError):
                 logger.warning("Invalid target distance")
                 return
+            state = get_state()
             logger.info(f"Starting DRIVE_DISTANCE to {target:.2f} m")
-            update_state(motion="DRIVE_DISTANCE", start_distance=0.0, target_distance=target)
+            update_state(motion="DRIVE_DISTANCE", target_distance=target, start_distance=state.distance_travelled)
 
         def stop_drive_distance():
             state = get_state()
             logger.info("Stopping DRIVE_DISTANCE")
             update_state(motion="STOP", start_distance=state.distance_travelled, target_distance=state.target_distance)
+        
+        def reset_distance_travelled():
+            logger.info("Resetting distance travelled to 0.0 m")
+            update_state(distance_travelled=0.0, start_distance=0.0, target_distance=0.0)
         with ui.button_group():
             ui.button('Start', color='green', on_click=start_drive_distance).classes('w-40')
             ui.button('Stop', color='red', on_click=stop_drive_distance).classes('w-40')
-        
+            ui.button('Reset Distance', on_click=reset_distance_travelled).classes('w-40')
         # --- Progress bar ---
-        progress_bar = ui.linear_progress(show_value=False,size="10px")
-
+        progress_bar = ui.linear_progress(show_value=False,size="20px")
+        distance_label = ui.label().classes('font-mono')
+        start_distance_label = ui.label().classes('font-mono')
+        target_distance_label = ui.label().classes('font-mono')
 
     # ===============================
     # TILAN NÄYTTÖ
     # ===============================
     state_label = ui.label().classes('mt-6 font-mono')
     velocity_label = ui.label().classes('font-mono')
-    distance_label = ui.label().classes('font-mono')
+    
 
     # ===============================
     # TIMERI / PÄIVITYS
@@ -114,6 +121,9 @@ def page():
             else "Velocity: --- m/s"
         )
         distance_label.text = f"Distance travelled: {state.distance_travelled:.2f} m"
+        start_distance_label.text = f"Start distance: {state.start_distance:.2f} m"
+        target_distance_label.text = (f"Target distance: {state.target_distance:.2f} m"
+            if state.target_distance is not None else "Target distance: --- m")
 
         # --- Näytä/piilota paneelit ---
         manual_container.visible = (state.control_type == "MAN")
@@ -122,20 +132,17 @@ def page():
         # Päivitä kytkin jos tila muuttuu muualla
         mode_switch.value = (state.control_type == "MAN")
 
-                # --- Progress bar update ---
-        if state.motion == "DRIVE_DISTANCE" and state.target_distance is not None:
-            # distance kuljettu suhteessa start_distanceen
-            distance_done = state.distance_travelled - state.start_distance
-            progress_total = state.target_distance - state.distance_travelled
-
-            # Suojaa nollalla, ettei jaeta nollalla
-            if progress_total <= 0:
-                progress = 0
-            else:
-                progress = max(0.0, min(distance_done / progress_total, 1.0))
-
-            progress_bar.value = progress
+             # --- Progress bar update --   
+         # distance kuljettu suhteessa start_distanceen
+        distance_done = state.distance_travelled
+        progress_total = state.target_distance  
+         # Suojaa nollalla, ettei jaeta nollalla
+        if progress_total is None or progress_total <= 0:
+            progress = 0
         else:
-            pass
+            progress = max(0.0, min(distance_done / progress_total, 1.0))   
+        progress_bar.value = progress
+        
+    
 
     ui.timer(0.2, refresh)

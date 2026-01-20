@@ -149,15 +149,14 @@ def handle_drive_distance(perception):
     
     if target is None:
         logger.error("Drive distance target is None, stopping")
-        update_state(motion="STOP")
+        update_state(motion="STOP" ,target_distance=0.0)
         return stop()
     
     if travelled >= target:
         logger.info(f"Reached target distance: {travelled:.2f} m >= {target:.2f} m")
         update_state(
             motion="STOP",
-            start_distance=None, 
-            target_distance=None
+            start_distance=travelled
             )
         return stop()
     

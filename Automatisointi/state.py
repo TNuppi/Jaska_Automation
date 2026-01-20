@@ -24,7 +24,7 @@ class RobotStateData:
     
     distance_travelled: float = 0.0
     start_distance: float = 0.0
-    target_distance: Optional[float] = None
+    target_distance: float = 0.0
     perception: Optional[PerceptionData] = None
 
 # ----------------- MODUULI-TILA (SINGLETON) -----------------

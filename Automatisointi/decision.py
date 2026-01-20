@@ -9,7 +9,7 @@ Tämän moduulin tehtävä:
 
 import logging
 from robot_types import PerceptionData, ControlCommand
-from robot_config import DEFAULT_LINEAR_SPEED, DEFAULT_ANGULAR_SPEED,DEBUG_DECISIONS
+from robot_config import DEBUG_DECISIONS, ChangeableConfig
 from state import get_state, update_state,get_distance_info, add_distance_travelled
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if DEBUG_DECISIONS else logging.INFO)
@@ -19,22 +19,22 @@ def stop() -> ControlCommand:
     return ControlCommand(linear_speed=0.0, angular_speed=0.0)
 
 def drive_forward() -> ControlCommand:
-    return ControlCommand(linear_speed=DEFAULT_LINEAR_SPEED, angular_speed=0.0)
+    return ControlCommand(linear_speed=ChangeableConfig.DEFAULT_LINEAR_SPEED, angular_speed=0.0)
 
 def drive_slow_forward() -> ControlCommand:
-    return ControlCommand(linear_speed=DEFAULT_LINEAR_SPEED * 0.5, angular_speed=0.0)
+    return ControlCommand(linear_speed=ChangeableConfig.DEFAULT_LINEAR_SPEED * 0.5, angular_speed=0.0)
 
 def drive_backward() -> ControlCommand:
-    return ControlCommand(linear_speed=-DEFAULT_LINEAR_SPEED * 0.3, angular_speed=0.0)
+    return ControlCommand(linear_speed=ChangeableConfig.DEFAULT_LINEAR_SPEED_BACKWARD, angular_speed=0.0)
 
 def turn_left() -> ControlCommand:
-    return ControlCommand(linear_speed=0.0, angular_speed=DEFAULT_ANGULAR_SPEED)
+    return ControlCommand(linear_speed=0.0, angular_speed=ChangeableConfig.DEFAULT_ANGULAR_SPEED)
 
 def turn_right() -> ControlCommand:
-    return ControlCommand(linear_speed=0.0, angular_speed=-DEFAULT_ANGULAR_SPEED)
+    return ControlCommand(linear_speed=0.0, angular_speed=-ChangeableConfig.DEFAULT_ANGULAR_SPEED)
 
 def turn() -> ControlCommand:
-    return ControlCommand(linear_speed=DEFAULT_LINEAR_SPEED * 0.5, angular_speed=DEFAULT_ANGULAR_SPEED)
+    return ControlCommand(linear_speed=ChangeableConfig.DEFAULT_LINEAR_SPEED * 0.5, angular_speed=ChangeableConfig.DEFAULT_ANGULAR_SPEED)
 
 # ----------------- PÄÄFUNKTIO -----------------
 def decide(perception: PerceptionData) -> ControlCommand:

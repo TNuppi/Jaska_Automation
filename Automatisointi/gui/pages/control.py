@@ -1,4 +1,15 @@
 # gui/pages/control.py
+"""gui/pages/control.py 
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Tarjota käyttöliittymä robotin ohjaukseen (MAN    /AUTO)
+- Mahdollistaa manuaalisen ohjauksen painikkeilla
+- Mahdollistaa etäisyyden ajon AUTO-tilassa 
+HUOM:
+- Ei robottispesifistä logiikkaa
+"""
 from nicegui import ui
 from state import update_state, get_state, get_perception
 import decision

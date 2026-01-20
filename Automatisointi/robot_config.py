@@ -1,7 +1,8 @@
 
 """
 RobotConfig.py
-Luonut Tero Nikkola luotu yhdessä Chat gpt:n kanssa
+
+Luonut Tero Nikkola luotu yhdessä ChatGPT-5 mini:n kanssa
 
 Sisältää kaikki robotin parametrit ja raja-arvot, jotka eivät muutu ajon aikana.
 """

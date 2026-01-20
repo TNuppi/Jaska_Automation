@@ -1,4 +1,13 @@
-# modbus_worker.py
+""" 
+modbus_worker.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Hoitaa Modbus-viestinnän moottoreiden kanssa erillisessä säikeessä
+- Tarjoaa thread-safe rajapinnan moottoreiden tilan lukemiseen ja käskyjen lähettämiseen
+"""
+
 import logging
 import threading
 import time

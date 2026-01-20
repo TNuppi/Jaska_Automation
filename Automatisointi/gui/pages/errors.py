@@ -1,3 +1,14 @@
+"""
+gui/pages/errors.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Näyttää virhe- ja varoituslokit NiceGUI-käyttöliittymässä
+
+"""
+
+
 from nicegui import ui
 import logging
 from collections import deque
@@ -25,7 +36,7 @@ def page():
     ui.label("🚨 Errors & Warnings").classes('text-2xl font-bold mb-4')
 
     log_column = ui.column().classes('w-full gap-1')
-
+    DISPLAYED_LOGS.clear()
     def refresh():
         
         

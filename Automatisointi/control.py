@@ -1,4 +1,12 @@
-# control.py
+"""
+control.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+Tämän moduulin tehtävä:
+- Lähettää ControlCommand moottoreille
+- Muuntaa lineaariset ja kulmanopeudet moottorikohtaisiksi käskyiksi
+
+"""
 from robot_types import ControlCommand
 from robot_config import (
     MAX_SPEED_VALUE,

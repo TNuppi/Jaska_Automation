@@ -1,3 +1,12 @@
+"""
+gui/pages/config.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Tarjota käyttöliittymä robotin konfigurointiin
+"""
+
 from nicegui import ui
 from robot_config import (
     DEFAULT_LINEAR_SPEED,

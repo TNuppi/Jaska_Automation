@@ -1,6 +1,7 @@
 """
-Docstring for Automatisointi.types
-Luonut Tero Nikkola yhessä ChatPT:n kanssa.
+robot_types.py
+
+Luonut Tero Nikkola yhessä ChatGPT-5 mini:n kanssa.
 
 Ohjelman tarkoituksena on määritellä koko ohjelmasssa käytettävät yhtenäisest tietotyypit ja niiden rakenteet.
 Varmistaa, että moduulit käyttävät yhtenäisiä datamuotoja.

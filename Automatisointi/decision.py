@@ -1,3 +1,12 @@
+"""
+decision.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+Tämän moduulin tehtävä:
+- Päätöksenteko robottiohjaukseen
+"""
+
+
 import logging
 from robot_types import PerceptionData, ControlCommand
 from robot_config import DEFAULT_LINEAR_SPEED, DEFAULT_ANGULAR_SPEED,DEBUG_DECISIONS
@@ -31,7 +40,8 @@ def turn() -> ControlCommand:
 def decide(perception: PerceptionData) -> ControlCommand:
     """
     Päätöksenteko robottiohjaukseen.
-    Käyttää suoraan singleton robot_state.
+    Päätökset perustuvat robotin tilaan ja havainnointiin.
+    Palauttaa ControlCommand-olion.
     """
     robot_states = get_state()
     emmergency_stop_button_S50 = perception.emmergency_stop

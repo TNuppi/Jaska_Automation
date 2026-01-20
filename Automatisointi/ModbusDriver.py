@@ -1,10 +1,12 @@
+# This script is responsible for creating the MinimalModbus instruments and handling the data transfer between the computer and the motor controllers
+# WARNING: Heavily AI made, needs some refactoring
+
 import minimalmodbus
 import time
 from Config import config
 import threading
 MODBUS_LOCK = threading.Lock()
-# This script is responsible for creating the MinimalModbus instruments and handling the data transfer between the computer and the motor controllers
-# WARNING: Heavily AI made, needs some refactoring
+
 
 class ModbusFunctions:
     """

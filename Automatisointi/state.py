@@ -1,4 +1,12 @@
-# state.py
+"""
+state.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Hallita robotin tilaa (state)
+- Pysyvät muuttujat (esim. kuljettu matka, viimeisin havainto)
+"""
 from dataclasses import dataclass
 from threading import Lock
 from typing import Optional

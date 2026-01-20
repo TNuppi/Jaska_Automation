@@ -1,25 +1,38 @@
-# sensors.py
+"""
+sensors.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Lukea sensoridataa eri lähteistä (Modbus, HTTP, tms.) 
+- Kerätä yhteen data ja palauttaa SensorData-muodossa
+
+Huom: sensori data on raakaa, ei suodatettua tai käsiteltyä
+"""
+
 from robot_types import SensorData
 from robot_config import CAMERA_AVABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
 from modbus_worker import modbus_worker
 import requests
 import logging
 
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 
+# --- Kameran syvyysdatan luku ---
 def read_camera_depth():
     if not CAMERA_AVABLE:
         return None, None, None
     try:
+        # TODO: tee oikea luku
         r = requests.get("http://camera_container:8000/depth", timeout=0.05)
         data = r.json()
         return data["left"], data["center"], data["right"]
     except Exception as e:
         logger.error(f"Camera read failed: {e}")
-        return None, None, None
 
+        return None, None, None
+# --- IMU-datan luku ---
 def read_IMU_heading():
     if not IMU_AVABLE:
         return None, None, None
@@ -43,11 +56,13 @@ def safe_motor_voltage(motor_id: int) -> float | None:
     logger.debug(f"Motor {motor_id} voltage: {voltage if voltage is not None else 'N/A'}")
     return voltage
 
-
+# --- IO-datan luku ---
 def read_IO_data():
     if not IO_AVABLE:
         return 1, 0, 0, 0, 0
     return 0, 0, 0, 0, 0  # TODO: oikea IO-luku
+
+
 def read_sensors() -> SensorData:
     motor1_freg = safe_motor_freq(1)
     motor3_freg = safe_motor_freq(3)

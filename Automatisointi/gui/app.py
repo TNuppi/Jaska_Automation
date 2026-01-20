@@ -1,4 +1,15 @@
-# gui/app.py
+"""
+gui/app.py
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+Tämän moduulin tehtävä:
+- Käynnistää ja hallinnoi robotin GUI:ta NiceGUI:llä
+- sivujen navigointi
+- hätäseis ja muut pysyvät napit
+
+HUOM:
+- Ei robottispesifistä logiikkaa
+"""
+
 from nicegui import ui, app
 import logging
 from control import apply_control

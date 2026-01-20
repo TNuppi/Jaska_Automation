@@ -1,6 +1,7 @@
 """
 perception.py
-Luonut Tero Nikkola yhdessä ChatGPT:n kanssa.
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
 
 Tämän moduulin tehtävä:
 - Muuntaa SensorData korkeamman tason havainnoiksi

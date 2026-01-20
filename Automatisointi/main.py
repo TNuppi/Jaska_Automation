@@ -1,4 +1,16 @@
-# main.py
+"""
+main.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+Tämän moduulin tehtävä:
+- Käynnistää robotin pääsilmukan
+- Käynnistää GUI:n NiceGUI:llä
+- Hallita ohjelman elinkaarta
+- Käynnistää tarvittavat taustatyöt (Modbus, tms.)
+HUOM:
+- Ei robottispesifistä logiikkaa
+"""
+
 import threading
 import time
 import logging

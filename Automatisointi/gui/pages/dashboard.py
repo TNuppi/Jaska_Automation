@@ -1,4 +1,10 @@
-# gui/pages/dashboard.py
+"""
+gui/pages/dashboard.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+Tämän moduulin tehtävä:
+- Näyttää robotin tilan dashboard-sivulla
+"""
 from nicegui import ui
 from state import get_state, get_perception
 import math

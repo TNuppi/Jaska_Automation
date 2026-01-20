@@ -1,13 +1,15 @@
-import platform
-import serial.tools.list_ports
-import glob
-
-
 # This is the configuration file
 # It has various things in a single class, including indexes like slave addresses of motors you want to use and paths
 # Every other script pulls necessary configurations from here
 
 # If you need to make changes such as the addresses of the motors or the device path for serial communication, do it here
+
+import platform
+import serial.tools.list_ports
+import glob
+
+
+
 
 class Configurations:
     def __init__(self):

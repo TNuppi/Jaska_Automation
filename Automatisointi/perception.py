@@ -131,7 +131,7 @@ def detect_obstacles(sensor_data) -> tuple[bool, bool]:
     obstacle_near = False
 
     for position, d in depths.items():
-
+        logger.debug(f"Depth at {position}: {d}")
         # --- None = dataa ei saatavilla ---
         if d is None:
             logger.error(f"Obstacle DATA MISSING ({position})")

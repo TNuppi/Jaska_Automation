@@ -11,7 +11,7 @@ Huom: sensori data on raakaa, ei suodatettua tai käsiteltyä
 """
 
 from robot_types import SensorData
-from robot_config import CAMERA_AVABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
+from robot_config import CAMERA_AVAILABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
 from modbus_worker import modbus_worker
 import requests
 import logging
@@ -21,8 +21,8 @@ logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 
 # --- Kameran syvyysdatan luku ---
 def read_camera_depth():
-    if not CAMERA_AVABLE:
-        return "inf", "inf", "inf"
+    if not CAMERA_AVAILABLE:
+        return float("inf"), float("inf"), float("inf")
     try:
         # TODO: tee oikea luku
         r = requests.get("http://camera_container:8000/depth", timeout=0.05)
@@ -72,8 +72,8 @@ def read_sensors() -> SensorData:
     battery1_voltage = safe_motor_voltage(1)
     battery2_voltage = safe_motor_voltage(4)
 
-    cam_left, cam_center, cam_right = read_camera_depth() if CAMERA_AVABLE else (None, None, None)
-    imu_x, imu_y, imu_z = read_IMU_heading() if IMU_AVABLE else (None, None, None)
+    cam_left, cam_center, cam_right = read_camera_depth()
+    imu_x, imu_y, imu_z = read_IMU_heading()
 
     return SensorData(
         motor1_measured_freq=motor1_freg,

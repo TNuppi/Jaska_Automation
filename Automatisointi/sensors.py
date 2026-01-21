@@ -22,7 +22,7 @@ logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 # --- Kameran syvyysdatan luku ---
 def read_camera_depth():
     if not CAMERA_AVABLE:
-        return None, None, None
+        return "inf", "inf", "inf"
     try:
         # TODO: tee oikea luku
         r = requests.get("http://camera_container:8000/depth", timeout=0.05)

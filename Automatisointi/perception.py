@@ -118,6 +118,7 @@ def detect_obstacles(sensor_data) -> tuple[bool, bool]:
     - inf  = ei estettä
     - nan  = este liian lähellä -> VAARA
     - float = mitattu etäisyys milleinä
+    - None = dataa ei saatavilla -> VAARA
     """
 
     depths = {
@@ -131,8 +132,14 @@ def detect_obstacles(sensor_data) -> tuple[bool, bool]:
 
     for position, d in depths.items():
 
+        # --- None = dataa ei saatavilla ---
+        if d is None:
+            logger.error(f"Obstacle DATA MISSING ({position})")
+            obstacle_front = True
+            obstacle_near = True
+            continue
         # --- NaN = este liian lähellä ---
-        if d is not None and math.isnan(d):
+        if math.isnan(d):
             logger.warning(f"Obstacle TOO CLOSE ({position})")
             obstacle_front = True
             obstacle_near = True

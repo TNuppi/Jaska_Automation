@@ -15,17 +15,19 @@ from robot_config import CAMERA_AVAILABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILAB
 from modbus_worker import modbus_worker
 import requests
 import logging
+import os
 
+CAMERA_URL = os.getenv("CAMERA_URL", "http://localhost:8000/depth")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 
 # --- Kameran syvyysdatan luku ---
 def read_camera_depth():
     if not CAMERA_AVAILABLE:
-        return float("inf"), float("inf"), float("inf")
+        return "inf", "inf", "inf"
     try:
         # TODO: tee oikea luku
-        r = requests.get("http://camera_container:8000/depth", timeout=0.05)
+        r = requests.get(CAMERA_URL, timeout=0.05)
         data = r.json()
         return data["left"], data["center"], data["right"]
     except Exception as e:

@@ -120,10 +120,10 @@ def handle_error() -> ControlCommand:
 
 # ----------------- MANUAL HANDLERS -----------------
 def handle_manual_forward(perception):
-    if perception.obstacle_near:
-        return stop()
-    if perception.obstacle_front:
+    if perception.obstacle_near and not perception.obstacle_front:
         return drive_slow_forward()
+    if perception.obstacle_front:
+        return stop()
     return drive_forward()
 
 def handle_manual_backward(perception):
@@ -137,58 +137,65 @@ def handle_manual_turn_right(perception):
 
 # ----------------- AUTO HANDLERS -----------------
 def handle_forward(perception):
+    state = get_state()
     if perception.obstacle_near:
-        update_state(motion="WAIT")
+        update_state(motion="SLOW_FORWARD", last_motion= state.motion )
         return stop()
     if perception.obstacle_front:
-        update_state(motion="SLOW_FORWARD")
+        update_state(motion="WAIT", last_motion= state.motion)
         return drive_slow_forward()
     return drive_forward()
 
 def handle_slow_forward(perception):
-    if perception.obstacle_near:
-        update_state(motion="WAIT")
+    state = get_state()
+    if not perception.obstacle_near:
+        update_state(motion=state.last_motion, last_motion= state.motion)
+        return drive_slow_forward()
+    if perception.obstacle_front:
+        update_state(motion="WAIT", last_motion= state.motion)
         return stop()
-    if not perception.obstacle_front:
-        update_state(motion="FORWARD")
-        return drive_forward()
     return drive_slow_forward()
 
 def handle_drive_distance(perception):
     start, target, travelled = get_distance_info()
-    
+    state = get_state()
     if target is None:
         logger.error("Drive distance target is None, stopping")
-        update_state(motion="STOP" ,target_distance=0.0)
+        update_state(motion="STOP", last_motion= state.motion ,target_distance=0.0)
         return stop()
     
     if travelled >= target:
         logger.info(f"Reached target distance: {travelled:.2f} m >= {target:.2f} m")
         update_state(
             motion="STOP",
+            last_motion= state.motion,
             start_distance=travelled
             )
         return stop()
     
-    if perception.obstacle_near:
-        update_state(motion="WAIT")
-        return stop()
+    if perception.obstacle_near and not perception.obstacle_front:
+        
+        return drive_slow_forward()
     
     if perception.obstacle_front:
-        return drive_slow_forward()
+        update_state(motion="WAIT", last_motion= state.motion)
+        return stop()
     
     return drive_forward()
 
 def handle_wait(perception):
-    if perception.obstacle_near:
-        return stop()
-    state = get_state()
-    previous_motion = state.last_motion or "FORWARD"
-    update_state(motion=previous_motion)
-    if previous_motion == "FORWARD": return drive_forward()
-    if previous_motion == "SLOW_FORWARD": return drive_slow_forward()
-    if previous_motion == "AVOIDING": return turn()
-    return drive_forward()
+
+    
+    if not perception.obstacle_front:
+        state = get_state()
+        previous_motion = state.last_motion or "STOP"
+        update_state(motion=previous_motion)
+        if previous_motion == "DRIVE_DISTANCE": return drive_slow_forward()
+        if previous_motion == "FORWARD": return drive_forward()
+        if previous_motion == "SLOW_FORWARD": return drive_slow_forward()
+        if previous_motion == "AVOIDING": return turn()
+        if previous_motion == "STOP":return stop()
+    return stop()
 
 # ----------------- GUI HELPERS -----------------
 def gui_set_manual():

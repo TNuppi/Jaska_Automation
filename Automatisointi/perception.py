@@ -138,17 +138,20 @@ def detect_obstacles(sensor_data) -> tuple[bool, bool]:
             obstacle_front = True
             obstacle_near = True
             continue
+        
         # --- NaN = este liian lähellä ---
-        if math.isnan(d):
-            logger.warning(f"Obstacle TOO CLOSE ({position})")
+        if d == "nan":
+            logger.error(f"Obstacle TOO CLOSE ({position})")
             obstacle_front = True
             obstacle_near = True
             continue
 
+
         # --- inf = ei estettä ---
-        if d is None or math.isinf(d):
+        if d == "inf":
             continue
 
+        
         # --- Normaali etäisyys ---
         if d < OBSTACLE_MIN_DISTANCE:
             obstacle_front = True

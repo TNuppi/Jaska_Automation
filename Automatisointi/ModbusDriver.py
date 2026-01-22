@@ -40,7 +40,7 @@ class ModbusFunctions:
 
 
     def __init__(self, port: str=config.USB_Serial_Device, baudrate: int=19200, parity: str='E', 
-                 stopbits: int=1, timeout: float=0.05, addresses: tuple=config.motor_addresses):
+                 stopbits: int=1, timeout: float=0.3, addresses: tuple=config.motor_addresses): # time out muutettu 0.05 -> 0.3 By TNuppi 21.1.26
         """
         Initialize the modbus instrument
         

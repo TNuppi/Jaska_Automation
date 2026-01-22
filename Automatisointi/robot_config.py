@@ -24,7 +24,7 @@ USE_SIMULATION = True
 # testi muuttujia joilla voidaan aktivoida laitteita ja testata ohjelmaa jos joitain laitetta ei ole käytössä
 MODBUS_AVAILABLE = True
 IMU_AVABLE = False
-CAMERA_AVAILABLE = False
+CAMERA_AVAILABLE = True
 IO_AVABLE = False
 
 # Renkaan koko metreinä

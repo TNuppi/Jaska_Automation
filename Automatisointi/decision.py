@@ -47,27 +47,35 @@ def decide(perception: PerceptionData) -> ControlCommand:
     emmergency_stop_button_S50 = perception.emmergency_stop
     restebutton = perception.reset_button
     prev_resetbutton = robot_states.prev_reset_button
-
+    update_state(prev_reset_button=restebutton)
     # --- HÄTÄSEIS TARKISTUS ---
     if emmergency_stop_button_S50:
-        logger.warning("Emergency stop (S50) activated!")
-        update_state(status="ERROR", motion="STOP")
+        if robot_states.error_source != "S50":
+            logger.warning("Emergency stop (S50) activated!")
+        update_state(status="ERROR", motion="STOP", error_source= "S50")
         return stop()
+        
     
     # --- RESET NAPIN TARKISTUS ---
     reset_edge = not prev_resetbutton and restebutton
 
     # --- VIRHETILASTA OK TILAAN PALUU VAIN RESET NAPIN NOUSEVALLA REUNALLA ---
-    if robot_states.status == "ERROR" and not emmergency_stop_button_S50:
-        if reset_edge:
-            logger.info("Emergency stop released, returning to OK status")
-            update_state(status="OK")
+    if robot_states.status == "ERROR" and reset_edge:
+       if robot_states.error_source == "S50" and emmergency_stop_button_S50:
+           logger.info("Cannot reset: physical emergency still active")
+           return stop()
 
+       logger.info(f"Resetting ERROR from source {robot_states.error_source}")
+       update_state(
+           status="OK",
+           error_source=None,
+           control_type="MAN",
+           motion="STOP"
+       )
     
     # --- VIRHETILA ---
-    if robot_states.status != "OK":
+    if robot_states.status == "ERROR":
         update_state(control_type="ERROR")
-        update_state(prev_reset_button=restebutton)
         return handle_error()
     
     # --- Virhe tilasta palautuminen ---
@@ -107,7 +115,8 @@ def decide(perception: PerceptionData) -> ControlCommand:
 
     # Tuntematon tila -> pysäytä
     logger.error(f"Unknown state: {robot_states.motion}, stopping")
-    update_state(status="ERROR" ,motion="STOP")
+    update_state(status="ERROR" ,motion="STOP",prev_reset_button=restebutton)
+
     return stop()
 
 # ----------------- ERROR HANDLER -----------------
@@ -120,9 +129,12 @@ def handle_error() -> ControlCommand:
 
 # ----------------- MANUAL HANDLERS -----------------
 def handle_manual_forward(perception):
+    robot_status = get_state()
     if perception.obstacle_near and not perception.obstacle_front:
+        logger.warning("Obstacle near slowing down")
         return drive_slow_forward()
     if perception.obstacle_front:
+        logger.warning("Obstacle front stopping")
         return stop()
     return drive_forward()
 
@@ -158,27 +170,31 @@ def handle_slow_forward(perception):
 
 def handle_drive_distance(perception):
     start, target, travelled = get_distance_info()
-    state = get_state()
+    robot_state = get_state()
     if target is None:
         logger.error("Drive distance target is None, stopping")
-        update_state(motion="STOP", last_motion= state.motion ,target_distance=0.0)
+        update_state(motion="STOP", last_motion= robot_state.motion ,target_distance=0.0)
         return stop()
     
     if travelled >= target:
         logger.info(f"Reached target distance: {travelled:.2f} m >= {target:.2f} m")
         update_state(
             motion="STOP",
-            last_motion= state.motion,
+            last_motion= robot_state.motion,
             start_distance=travelled
             )
         return stop()
     
     if perception.obstacle_near and not perception.obstacle_front:
-        
+        if robot_state.last_motion != "SLOW FORWARD":
+            update_state(last_motion="SLOW FORWARD")
+            logger.warning("Obstacle near slowing down")
         return drive_slow_forward()
     
     if perception.obstacle_front:
-        update_state(motion="WAIT", last_motion= state.motion)
+        
+        update_state(motion="WAIT", last_motion= robot_state.motion)
+        logger.warning("Obstacle front stopping")
         return stop()
     
     return drive_forward()

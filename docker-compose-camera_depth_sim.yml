@@ -1,7 +1,7 @@
 services:
   camera_container:       
     build:
-      context: ./testi
+      context: ./simulaattori
     ports:
       - "8000:8000"
 

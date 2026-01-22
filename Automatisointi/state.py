@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 class RobotStateData:
     status: str = "OK"
     last_status: Optional[str] = None
+    error_source: Optional[str] = None
     control_type: str = "AUTO"
     motion: str = "STOP"
     last_motion: Optional[str] = None
@@ -45,13 +46,39 @@ _lock = Lock()
 # ----------------- STATE FUNKTIOT -----------------
 
 def get_state() -> RobotStateData:
-    """Palauttaa KOPION robotin tilasta (thread-safe)."""
+    """Palauttaa KOPION robotin tilasta (thread-safe).
+    status: str # esim. "OK" "ERROR" 
+    control_type: str # MAN |AUTO
+    motion: str # esim. "STOP", "FORWARD", "TURNING_LEFT"
+    last_motion: str | None #edellinen tila 
+    last_turn: str | None  esim. "LEFT", "RIGHT" tai None
+    
+    prev_reset_button: bool  # edellinen reset nappi tila
+
+    distance_travelled: float # kuljettu matka
+    target_distance: float | None
+    start_distance: float | None 
+    
+    """
     with _lock:
         return RobotStateData(**vars(_state))
 
 
 def update_state(**kwargs):
-    """Päivittää robotin tilaa thread-safe."""
+    """Päivittää robotin tilaa thread-safe.
+    status: str # esim. "OK" "ERROR" 
+    control_type: str # MAN |AUTO
+    motion: str # esim. "STOP", "FORWARD", "TURNING_LEFT"
+    last_motion: str | None #edellinen tila 
+    last_turn: str | None  esim. "LEFT", "RIGHT" tai None
+    
+    prev_reset_button: bool  # edellinen reset nappi tila
+
+    distance_travelled: float # kuljettu matka
+    target_distance: float | None
+    start_distance: float | None 
+    
+    """
     with _lock:
         for k, v in kwargs.items():
             if hasattr(_state, k):
@@ -61,11 +88,33 @@ def update_state(**kwargs):
 # ----------------- PERCEPTION -----------------
 
 def get_perception() -> Optional[PerceptionData]:
+    """
+    palauttaa perception datan
+    obstacle_near: bool # Este lähellä
+    obstacle_front: bool # Este edessä
+    heading: float # Suuntima
+    measured_velocity: float # sensoridatasta lakettu
+    battery1: float | None # Akun 1 jännite
+    battery2: float | None # Akun 2 jännite
+    emmergency_stop: bool # Hätä seis tila
+    reset_button: bool # Reset nappi painettu
+    """
     with _lock:
         return _state.perception
 
 
 def update_perception(perception: PerceptionData):
+    """
+    päivittää perceptiondatan
+    obstacle_near: bool # Este lähellä
+    obstacle_front: bool # Este edessä
+    heading: float # Suuntima
+    measured_velocity: float # sensoridatasta lakettu
+    battery1: float | None # Akun 1 jännite
+    battery2: float | None # Akun 2 jännite
+    emmergency_stop: bool # Hätä seis tila
+    reset_button: bool # Reset nappi painettu
+    """
 
     with _lock:
         _state.perception = perception
@@ -97,6 +146,9 @@ def request_stop():
 # ----------------- DISTANCE HELPERS -----------------
 
 def get_distance_info():
+    """
+    palauttaa matkat start, target, tarvelled
+    """
     with _lock:
         return _state.start_distance, _state.target_distance, _state.distance_travelled
 

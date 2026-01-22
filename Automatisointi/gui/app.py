@@ -9,9 +9,10 @@ Tämän moduulin tehtävä:
 HUOM:
 - Ei robottispesifistä logiikkaa
 """
+import logging
 
 from nicegui import ui, app
-import logging
+from datetime import datetime
 from control import apply_control
 from state import request_stop, update_state
 from robot_config import DEBUG_APP
@@ -24,7 +25,15 @@ def start_gui():
 # ----------------- GUI Navigointi -----------------
     def navigation():
         with ui.column().classes('w-64 bg-gray-200 p-4'):
-            ui.label('🤖 Robot GUI').classes('text-xl font-bold')
+            with ui.row():
+                ui.label('🤖 Robot GUI').classes('text-xl font-bold')
+                time_label = ui.label().classes('font-mono text-lg mb-2')
+
+            def update_time():
+                now = datetime.now().strftime('%H:%M')
+                time_label.text = f"{now}"
+            
+            ui.timer(1, update_time)
             ui.link('Dashboard', '/')
             ui.link('Control', '/control')
             # ui.link('State', '/state')
@@ -34,14 +43,14 @@ def start_gui():
 # ----------------- PYSYVÄT NAPIT -----------------
             with ui.button_group():
                 ui.button('EMERGENCY STOP', color='red', on_click=emergency_stop)
-                ui.button('RESET ROBOT', color='blue', on_click=reseet_dialog)
+                ui.button('RESET ROBOT', color='blue', on_click=reset_dialog)
             ui.button('STOP PROGRAM', color='orange', on_click=stop_dialog)
             
   # ----------------- HÄTÄSEIS napin käsittely -----------------          
     def emergency_stop():
-        update_state(status="ERROR", motion="STOP")
+        update_state(status="ERROR", motion="STOP", error_source= "GUI_ESTOP")
         ui.notify("HÄTÄSTOP AKTIIVINEN")
-        logger.warning("Emergency stop pressed")
+        logger.warning("Emergency stop pressed from GUI")
 
 # ----------------- STOP dialogi -----------------
     def stop_dialog():
@@ -53,7 +62,7 @@ def start_gui():
                 ui.button("Ei", color='red', on_click=dialog.close)
         dialog.open()
 # ----------------- RESET dialogi -----------------
-    def reseet_dialog():
+    def reset_dialog():
         with ui.dialog() as dialog, ui.card():
             ui.label("Resetoidaanko robotti?")
             with ui.row():
@@ -71,11 +80,10 @@ def start_gui():
         app.shutdown()
  # ----------------- RESET ROBOTTI funktio -----------------   
     def ResetRobot(dialog):
-        update_state(status="OK")
+        update_state(status="OK",error_source = None, control_type ="MAN",motion= "STOP")
         logger.info("Robot reset requested")
         dialog.close()
         ui.notify("Robotti resetoitu")
-        
 
     # 🔥 TÄRKEÄ: kaikki UI VAIN sivufunktioissa
     @ui.page('/')

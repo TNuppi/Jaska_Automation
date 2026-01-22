@@ -60,6 +60,7 @@ class RobotStateData:
     status: str # esim. ok, error
     control_type: str # MAN |AUTO
     motion: str # esim. "STOP", "FORWARD", "TURNING_LEFT"
+    error_source: str = None
     last_motion: str | None = None #edellinen tila 
     last_turn: str | None = None # "LEFT", "RIGHT" tai None
     

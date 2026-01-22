@@ -10,6 +10,7 @@ import json
 import logging
 from pathlib import Path
 from math import pi
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,9 +24,9 @@ USE_SIMULATION = True
 
 # testi muuttujia joilla voidaan aktivoida laitteita ja testata ohjelmaa jos joitain laitetta ei ole käytössä
 MODBUS_AVAILABLE = True
-IMU_AVABLE = False
-CAMERA_AVAILABLE = True
-IO_AVABLE = False
+CAMERA_AVAILABLE = os.getenv("CAMERA_AVAILABLE", "0") == "1"
+IMU_AVAILABLE = os.getenv("IMU_AVAILABLE", "0") == "1"
+IO_AVAILABLE = os.getenv("IO_AVAILABLE", "0") == "1"
 
 # Renkaan koko metreinä
 WHEEL_DIAMETER = 0.26  # m

@@ -11,22 +11,26 @@ Huom: sensori data on raakaa, ei suodatettua tai käsiteltyä
 """
 
 from robot_types import SensorData
-from robot_config import CAMERA_AVAILABLE, IMU_AVABLE, IO_AVABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
+from robot_config import CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
 from modbus_worker import modbus_worker
 import requests
 import logging
 import os
 
 CAMERA_URL = os.getenv("CAMERA_URL", "http://localhost:8000/depth")
+IO_URL = os.getenv("IO_URL","http://localhost:8000/IO")
+IMU_URL = os.getenv("IMU_URL","http://localhost:8000/IMU")
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
 
 # --- Kameran syvyysdatan luku ---
 def read_camera_depth():
     if not CAMERA_AVAILABLE:
+        logger.debug("Camera not available")
         return "inf", "inf", "inf"
     try:
-        # TODO: tee oikea luku
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
         r = requests.get(CAMERA_URL, timeout=0.05)
         data = r.json()
         return data["left"], data["center"], data["right"]
@@ -36,9 +40,19 @@ def read_camera_depth():
         return None, None, None
 # --- IMU-datan luku ---
 def read_IMU_heading():
-    if not IMU_AVABLE:
+    if not IMU_AVAILABLE:
+        logger.debug("IMU not available")
         return None, None, None
-    return 0.0, 0.0, 0.0  # TODO: oikea IMU-luku
+    
+    # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+    try:
+        r = requests.get(IMU_URL, timeout=0.05)
+        data = r.json()
+        return data["x"], data["y"], data["z"]
+    except Exception as e:
+        logger.error(f"Camera read failed: {e}")
+        return None, None, None
+
 
 def safe_motor_freq(motor_id):
     if not MODBUS_AVAILABLE:
@@ -60,9 +74,17 @@ def safe_motor_voltage(motor_id: int) -> float | None:
 
 # --- IO-datan luku ---
 def read_IO_data():
-    if not IO_AVABLE:
+    if not IO_AVAILABLE:
+        logger.debug("IO not available")
         return 1, 0, 0, 0, 0
-    return 0, 0, 0, 0, 0  # TODO: oikea IO-luku
+    try:
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+        r = requests.get(IO_URL, timeout=0.05)
+        data = r.json()
+        return data["IO1"], data["IO2"], data["IO3"], data["IO4"],data["IO5"]
+    except Exception as e:
+        logger.error(f"Camera read failed: {e}")
+        return 0, 0, 0, 0, 0  
 
 
 def read_sensors() -> SensorData:

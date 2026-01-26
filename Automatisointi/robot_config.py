@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 CONFIG_FILE = Path('robot_config.json')
 # yleisiä muuttujia
 
-CONTROL_LOOP_DT = 0.1
+CONTROL_LOOP_DT = 0.1 # sekunttia
 # Ohjelman testaus generoidulla anturi arvoilla
 USE_SIMULATION = True
 

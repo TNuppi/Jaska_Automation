@@ -24,21 +24,24 @@ from control import apply_control, stop_all_motors
 from gui import start_gui
 from robot_config import CONTROL_LOOP_DT, DEBUG_MAIN
 from modbus_worker import modbus_worker
-from state import update_perception, calculate_time_delta, add_distance_travelled
+from state import update_perception, calculate_time_delta, add_distance_travelled, calculate_distance
 
+# Logger infon asetukset
 logging.basicConfig(
     
     format='%(asctime)s [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger("MAIN")
 logger.setLevel(logging.DEBUG if DEBUG_MAIN else logging.INFO)
+
+# control looppiin hallintaan liittyvä muuttuja
 stop_event = threading.Event()
 
-
+# guin hallintaan liittyvä prosessi funktio
 def is_nicegui_reload_process() -> bool:
     return os.environ.get("NICEGUI_PROCESS") == "reload"
 
-
+# Varsinainen robotin ohjaus looppi
 def control_loop():
     logger.info("Control loop started")
 
@@ -54,7 +57,7 @@ def control_loop():
             dt = calculate_time_delta()
             # 5. laske kuljettu matka
             velocity = perception.measured_velocity or 0.0
-            distance = dt * velocity
+            distance = calculate_distance(dt , velocity)
             add_distance_travelled(distance)
             # 6. tee päätös
             command = decide(perception)
@@ -66,7 +69,7 @@ def control_loop():
             stop_all_motors()
 
         time.sleep(CONTROL_LOOP_DT)
-
+    # Sammutetaan moottorit kun hypätään control loopista
     stop_all_motors()
     logger.info("Control loop stopped")
 

@@ -37,14 +37,16 @@ def read_camera_depth():
         logger.error(f"Camera read failed: {e}")
 
         return None, None, None
+
 # --- IMU-datan luku ---
-def read_IMU_heading():
+def read_IMU():
     if not IMU_AVAILABLE:
         logger.debug("IMU not available")
         return None, None, None
     
     try:
-        r = requests.get(IMU_URL , timeout=0.05)  # ← MUUTOS: /orientation
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+        r = requests.get(IMU_URL , timeout=0.05)  
         data = r.json()
         logger.debug(f'roll deg: {data["roll_deg"]}, pitch deg: {data["pitch_deg"]}')
         # MTi-7 antaa roll, pitch, yaw → mapataan x,y,z
@@ -58,6 +60,7 @@ def read_IMU_heading():
         logger.error(f"IMU read failed: {e}")
         return None, None, None
 
+# --- Moottori ohjaimien luku --- 
 def safe_motor_freq(motor_id):
     if not MODBUS_AVAILABLE:
         return None
@@ -101,7 +104,7 @@ def read_sensors() -> SensorData:
     battery2_voltage = safe_motor_voltage(4)
 
     cam_left, cam_center, cam_right = read_camera_depth()
-    imu_x, imu_y, imu_z  = read_IMU_heading()
+    imu_x, imu_y, imu_z  = read_IMU()
 
     return SensorData(
         motor1_measured_freq=motor1_freg,

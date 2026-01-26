@@ -13,7 +13,7 @@ import logging
 
 from nicegui import ui, app
 from datetime import datetime
-from control import apply_control
+from control import stop_all_motors
 from state import request_stop, update_state
 from robot_config import DEBUG_APP
 
@@ -26,7 +26,7 @@ def start_gui():
     def navigation():
         with ui.column().classes('w-64 bg-gray-200 p-4'):
             with ui.row():
-                ui.label('🤖 Robot GUI').classes('text-xl font-bold')
+                ui.label('🤖 JASKA GUI').classes('text-xl font-bold')
                 time_label = ui.label().classes('font-mono text-lg mb-2')
 
             def update_time():
@@ -117,5 +117,7 @@ def start_gui():
         page()
 
     logger.info("Starting GUI on http://localhost:8080")
-    ui.run(title="Robot GUI", port=8080 ,reload=False)
-    logger.info("GUI stopped")
+    ui.run(title="JASKA GUI", port=8080 ,reload=False)
+    logger.info("GUI stopped Stoping all motors")
+    stop_all_motors()
+    logger.info("END")

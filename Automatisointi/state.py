@@ -178,3 +178,15 @@ def calculate_time_delta() -> float:
     return min(delta, 0.5)
 
 
+def calculate_distance(dt:float, velosity:float) -> float:
+    """
+    Lasketaan kuljettu matka
+    
+    :param dt: delta time
+    :type dt: float
+    :param velosity: 
+    :type velosity: float
+    :return: distance
+    :rtype: float
+    """
+    return dt*velosity

@@ -35,15 +35,20 @@ def perceive(sensor_data: SensorData) -> PerceptionData:
     """
     rpms = calculate_motor_rpms(sensor_data)
     logger.debug(f"Motor RPMs: {rpms}")
+
     velocity = calculate_linear_velocity(rpms)
     logger.debug(f"Calculated linear velocity: {velocity} m/s")
+    
     heading = calculate_heading(sensor_data)
     logger.debug(f"Calculated heading: {heading} rad")
+    
     obstacle_front, obstacle_near = detect_obstacles(sensor_data)
     logger.debug(f"Obstacle front: {obstacle_front}, Obstacle near: {obstacle_near}")
+    
     battery1 = sensor_data.battery1_voltage
     battery2 = sensor_data.battery2_voltage
     logger.debug(f"Battery1 voltage: {battery1} V, Battery2 voltage: {battery2} V")
+    
     io_data = read_IO_states(sensor_data)
 
 

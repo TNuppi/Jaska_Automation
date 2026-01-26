@@ -28,6 +28,10 @@ CAMERA_AVAILABLE = os.getenv("CAMERA_AVAILABLE", "0") == "1"
 IMU_AVAILABLE = os.getenv("IMU_AVAILABLE", "0") == "1"
 IO_AVAILABLE = os.getenv("IO_AVAILABLE", "0") == "1"
 
+CAMERA_URL = os.getenv("CAMERA_URL", "http://localhost:8000/depth")
+IO_URL = os.getenv("IO_URL","http://localhost:8000/IO")
+IMU_URL = os.getenv("IMU_URL","http://localhost:8000")
+
 # Renkaan koko metreinä
 WHEEL_DIAMETER = 0.26  # m
 

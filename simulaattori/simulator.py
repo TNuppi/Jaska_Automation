@@ -29,9 +29,9 @@ IO_data = {
     "IO5":0,
 }
 IMU_data = {
-        "x": float(0.0),
-        "y": float(0.0),
-        "z": float(0.0),
+        "roll_deg": float(0.0),     # roll = x
+        "pitch_deg": float(0.0),    # pitch = y
+        "yaw_deg": float(0.0),      # yaw = z
     }
 
 @app.get("/depth")
@@ -53,11 +53,11 @@ def get_IO():
 
     }
 @app.get("/IMU")
-def get_imu():
+def get_IMU():
     return {
-        "x": IMU_data["x"],
-        "y": IMU_data["y"],
-        "z": IMU_data["z"],
+        "roll_deg": IMU_data["roll_deg"],       # x = roll
+        "pitch_deg": IMU_data["pitch_deg"],      # y = pitch
+        "yaw_deg": IMU_data["yaw_deg"],         # z = yaw/heading
     }
 
 
@@ -97,8 +97,8 @@ def set_IO(IO1:int,IO2:int,IO3:int,IO4:int,IO5:int):
     return get_IO()
 
 @app.post("/set_IMU")
-def setIMU(x:float,y:float,z:float):
-    IMU_data["x"] = x
-    IMU_data["y"] = y
-    IMU_data["z"] = z
-    return get_imu()
+def set_IMU(x:float,y:float,z:float):
+    IMU_data["roll_deg"] = x
+    IMU_data["pitch_deg"] = y
+    IMU_data["yaw_deg"] = z
+    return get_IMU()

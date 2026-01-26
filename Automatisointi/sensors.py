@@ -12,14 +12,13 @@ Huom: sensori data on raakaa, ei suodatettua tai käsiteltyä
 
 from robot_types import SensorData
 from robot_config import CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
+from robot_config import CAMERA_URL, IO_URL, IMU_URL
 from modbus_worker import modbus_worker
 import requests
 import logging
 import os
 
-CAMERA_URL = os.getenv("CAMERA_URL", "http://localhost:8000/depth")
-IO_URL = os.getenv("IO_URL","http://localhost:8000/IO")
-IMU_URL = os.getenv("IMU_URL","http://localhost:8000/IMU")
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
@@ -44,15 +43,20 @@ def read_IMU_heading():
         logger.debug("IMU not available")
         return None, None, None
     
-    # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
     try:
-        r = requests.get(IMU_URL, timeout=0.05)
+        r = requests.get(IMU_URL , timeout=0.05)  # ← MUUTOS: /orientation
         data = r.json()
-        return data["x"], data["y"], data["z"]
+        logger.debug(f'roll deg: {data["roll_deg"]}, pitch deg: {data["pitch_deg"]}')
+        # MTi-7 antaa roll, pitch, yaw → mapataan x,y,z
+        return (
+            data["roll_deg"],   # x = roll
+            data["pitch_deg"],  # y = pitch  
+            data["yaw_deg"],     # z = yaw/heading
+            
+        )
     except Exception as e:
-        logger.error(f"Camera read failed: {e}")
+        logger.error(f"IMU read failed: {e}")
         return None, None, None
-
 
 def safe_motor_freq(motor_id):
     if not MODBUS_AVAILABLE:
@@ -97,7 +101,7 @@ def read_sensors() -> SensorData:
     battery2_voltage = safe_motor_voltage(4)
 
     cam_left, cam_center, cam_right = read_camera_depth()
-    imu_x, imu_y, imu_z = read_IMU_heading()
+    imu_x, imu_y, imu_z  = read_IMU_heading()
 
     return SensorData(
         motor1_measured_freq=motor1_freg,

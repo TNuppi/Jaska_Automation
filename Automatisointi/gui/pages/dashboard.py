@@ -17,7 +17,15 @@ def page():
     ui.label("📊 Dashboard").classes("text-2xl font-bold mb-4")
 
     # ===============================
-    # YLIN RIVI: Control / Motion / Obstacle
+    # YLIN RIVI: Battery
+    # ===============================
+    with ui.card().classes("w-1/2 p-4"):
+        ui.label("🔋 Battery").classes("text-lg font-bold mb-3")
+        with ui.row().classes("gap-2"):
+            battery1_label = ui.label("Battery 1: ---").classes("text-sm font-bold font-mono p-2 bg-gray-50 rounded")
+            battery2_label = ui.label("Battery 2: ---").classes("text-sm font-bold font-mono p-2 bg-gray-50 rounded")
+    # ===============================
+    # TOINEN RIVI: Control / Motion / Obstacle
     # ===============================
     with ui.row().classes("w-full gap-4"):
         with ui.card().classes("w-1/4 p-4"):
@@ -34,7 +42,7 @@ def page():
         
 
     # ===============================
-    # TOINEN RIVI: Speed / Heading / BATTERY
+    # KOLMAS RIVI: Speed / Heading / travelled distance
     # ===============================
     with ui.row().classes("w-full gap-4 mt-4"):
 
@@ -46,25 +54,15 @@ def page():
         with ui.card().classes("w-1/4 p-4"):
             ui.label("Heading (°)")
             heading_label = ui.label("---").classes("text-xl font-bold")
-
-   # with ui.row().classes("w-full gap-4 mt-4"):
-        with ui.card().classes("w-1/4 p-4"):
-            ui.label("🔋 Battery").classes("text-lg font-bold mb-3")
-
-            with ui.column().classes("gap-2"):
-                with ui.card().classes("w-full p-2 bg-gray-50"):
-                    battery1_label = ui.label("Battery 1: ---").classes("text-sm font-bold font-mono")
-
-                with ui.card().classes("w-full p-2 bg-gray-50"):
-                    battery2_label = ui.label("Battery 2: ---").classes("text-sm font-bold font-mono")
-    # ===============================
-    # KOLMAS RIVI: distance jne.
-    # ===============================
-    with ui.row().classes("w-full gap-4 mt-4"):
         
         with ui.card().classes("w-1/4 p-4"):
             ui.label("Travelled Distance (m)")
             travellde_label = ui.label("0.0").classes("text-xl font-bold")
+
+    # ===============================
+    
+        
+
 
     
 
@@ -89,7 +87,7 @@ def page():
             battery1 = getattr(perception, "battery1", None)
             battery2 = getattr(perception, "battery2", None)
 
-            heading_label.set_text(f"{math.degrees(heading):.1f}°" if heading is not None else "---")
+            heading_label.set_text(f"{heading:.1f}°" if heading is not None else "---") # 
             speed_label.set_text(f"{velocity:.2f}" if velocity is not None else "---")
             obstacle_label.set_text(f"Front: {obstacle_front} / Near: {obstacle_near}")
             battery1_label.set_text(f"Battery 1: {battery1:.2f} V" if battery1 is not None else "Battery 1: ---")

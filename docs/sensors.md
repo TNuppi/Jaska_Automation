@@ -1,6 +1,6 @@
 ## sensors.py
 
-vastaa sensoreiden lukemisesta eri lähteistä
+vastaa sensoreiden lukemisesta eri lähteistä, kerätä ne yhteen ja palauttaa SensorData objektina.
 
 ```mermaid
 flowchart TD
@@ -10,12 +10,16 @@ roboconfig["robot_config.py"]
 modbusworker["modbus_worker.py"]
 types["robot_type.py"]
 request["request"]
+data["return: <br/> SensorData"]
 
 roboconfig -->|settings| sensors
 types -->|"SensorData"| sensors
 modbusworker -->|"motor contoller feedback"| sensors
 request -.-> |FastAPI | sensors
+sensors --> data
 
+classDef datastyle fill:#4EC9B0,stroke:#333,stroke-width:2px
+class data datastyle
 ```
 ### Funktiot
 

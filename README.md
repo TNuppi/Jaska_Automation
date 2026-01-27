@@ -41,7 +41,7 @@ vastuut:
 
 #### robot_types.py
 
-Määrittelee koko ohjelmassa käytettävät yhteiset tietotyypit ja niiden rakenteet. Varsmistaa, että moduulit käyttävät keskenään yhtenäisiä datamuotoja.
+Määrittelee koko ohjelmassa käytettävät yhteiset tietotyypit ja niiden rakenteet. Varmistaa, että moduulit käyttävät keskenään yhtenäisiä datamuotoja.
 
 esim.
 

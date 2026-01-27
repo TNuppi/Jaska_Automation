@@ -4,17 +4,17 @@
 
 Ohjelma jaetaan yhteen pääohjelmaan ja kymmeneen aliohjelmaan, sekä GUI kokonaisuuteen.
 
-* main.py
-* robot_types.py
-* sensors.py
-* perception.py
-* decision.py
-* control.py
-* state.py
-* robot_config.py
-* Config.py
-* ModbusDriver.py
-* modbus_worker.py
+* [main.py](docs/main.md)
+* [robot_types.py](docs/robot_types.md)
+* [sensors.py](docs/sensors.md)
+* [perception.py](docs/perception.md)
+* [decision.py](docs/decision.md)
+* [control.py](docs/control.md)
+* [state.py](docs/state.md)
+* [robot_config.py](docs/robot_config.md)
+* [Config.py](docs/Config.md)
+* [ModbusDriver.py](docs/ModbusDriver.md)
+* [modbus_worker.py](docs/modbus_worker.md)
 
 - **gui/**
     - \_\_init\_\_.py

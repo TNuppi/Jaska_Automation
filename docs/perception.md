@@ -65,80 +65,92 @@ class H datastyle
 
 ```
 ---
-### calculate_motor_rpms(SensorData)
+### calculate_motor_rpms(SensorData) -> dict
+
 funktio laskeen kaikkien Sensoridatasta olevien moottorien kierrosnopeuden moottori ohjaimen antamasta taajuudesta
 jos taajuus on **None** niin annetaan kierrosnopeus 0.0
-kierrosnopeus lasketaan freg* RPM_FACTOR. RPM_FACTOR määritellään robot_config.py:ssä. 
+kierrosnopeus lasketaan $$RPM= freg \cdot RPM\_FACTOR$$  **RPM_FACTOR** määritellään robot_config.py:ssä joka lasketaan
+
+$$ RPM\_FACTOR = \frac {60}{n} $$
+
+missä
+$n =$ moottorin napaparit
+
 funktio palauttaa dictionaryn jossa avaimet on motor1,motor3 motor4 ja motor6.
+
+HUOM! pyörimissuuntaa ei huomioda ollenkaan
 
 ---
 
-### calculate_heading(SensorData)
+### calculate_linear_velocity(motor_rpms: dict[str,float]) -> float:
+
+Funktio laskee lineaarinopeuden (m/s) moottoreiden kierrosnopeuksien keskiarvosta. 
+$$ velocity = \frac {RPM_{avg} \cdot \pi \cdot D_{wheel}}{60} $$
+
+**WHEEL_DIAMETER** määritellään robot_config.py:ssä.
+Funktio palauttaa nopeuden nopeuden floattina ja jos kierrosnopeutta ei ole saatavilla niin nopeudeksi määritellään 0.0. 
+
+HUOM! jos pyörimissuuntaa ei huomioda niin ja jos osa renkaista pyörii eri suuntaan niin nopeus ei vastaa todellisuutta. 
+
+
+---
+
+### calculate_heading(SensorData) -> float
+
 Funktio tällä hetkellä välittää vain raakadatan eteenpäin, mutta jatkossa tässä voi tehdä tälle käsittelyitä.
 
 ---
 
-### detect_obstacles(SensorData)
+### detect_obstacles(SensorData) -> tuple[bool, bool]
 
 Katsotaan onko syvyys mittauksissa todettu että este olisi lähellä tai suoraan edessä joko näkökentän keskellä, vasemmassa reunassa tai oikeassa reunassa.
 Rajat OBSTACLE_MIN_DISTANCE ja OBSTACLE_NEAR_DISTANCE määritellään robot_config.py:ssä.
 
+palauttaa obstacle_front, obstacle_near totuus arvona. 
 
-
+#### Vuokaavio toiminnasta
 ```mermaid
 
 flowchart TD
     A(["detect_obstacles(sensor_data)"])
-
     B["Muodosta depths:<br/>left / center / right"]
-    C["obstacle_front = False<br/>obstacle_near = False"]
+    
+    C["return <br/> obstacle_front = False <br/>obstacle_near = True"]
+    E["return <br/> obstacle_front = False<br/>obstacle_near = False"]
+    H["return <br/> obstacle_front = True<br/>obstacle_near = True"]
+    
+    D["Käy läpi<br/>depths.items()"]
 
-    D{"Käy läpi<br/>depths.items()"}
+    F{"d is None? <br/> log error:<br/>TOO CLOSE"}
 
-    E["lue depth d<br/>log debug"]
-
-    F{d is None?}
-    G["log error:<br/>DATA MISSING"]
-    H["obstacle_front = True<br/>obstacle_near = True"]
-
-    I{d == 'nan'?}
-    J["log error:<br/>TOO CLOSE"]
-    K["obstacle_front = True<br/>obstacle_near = True"]
-
+    I{"d == 'nan'? <br/> log error:<br/>DATA MISSING"}
     L{d == 'inf'?}
 
+
     M{d < OBSTACLE_MIN_DISTANCE?}
-    N["obstacle_front = True"]
-
     O{d < OBSTACLE_NEAR_DISTANCE?}
-    P["obstacle_near = True"]
-
-
-    R["return<br/>(obstacle_front,<br/>obstacle_near)"]
-
+    
     S["robo_config.py"]
 
     %% ===== Virtaus =====
-    A --> B --> C --> D
-    D --> E --> F
+    A --> B  --> D
+    D --> F
 
-    F -- Kyllä --> G --> H --> D
+    F -- Kyllä --> H
     F -- Ei --> I
 
-    I -- Kyllä --> J --> K --> D
+    I -- Kyllä --> H
     I -- Ei --> L
-
-    L -- Kyllä --> D
-    L -- Ei --> M
-
-    M -- Kyllä --> N --> O
-    M -- Ei --> O
-
-    O -- Kyllä --> P --> D
-    O -- Ei --> D
-
-    D -- Valmis --> R
-
+    
+    L -- Ei --> O 
+    L -- Kyllä --> E
+    
+    M -- Kyllä --> H
+    M -- Ei --> C
+   
+    O -- Kyllä --> M
+    O -- Ei --> E
+    
     S --> M
     S --> O
 

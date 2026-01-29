@@ -109,7 +109,8 @@ flowchart TD
 
 ---
 ### Häiriön käsittely
-
+Tähän funktioon voidaan laittaa erillaisia häiriön käsittelyyn liittyviä toimintoja, tällä hetkellä logaa errorin jos se ei ole sitä vielä tehnyt.
+ 
 ```mermaid
 flowchart TD
     handleErrorStart(["handle_error()"])
@@ -130,7 +131,7 @@ flowchart TD
 ```
 ---
 ### Manuaali ohjaukset
-
+Funktioilla voidaan ohjata robottia vakio nopeuksilla eteen, taakse ja käännökset oikealle ja vasemmalle. Eteenpäin ohjaukseen on tehty rajoitukset että jos este on lähellä niin ajetaan hitaasti jos este on edessä niin estetään liike eteenpäin. 
 ```mermaid
 
 flowchart TD
@@ -173,6 +174,7 @@ flowchart TD
 
 #### eteenpäin ajo
 
+Funktiossa robottia ohjataan eteen päin jos ei ole esteitä, jos este on lähellä niin hidastetaan ja jos este on edesä niin jäädään odottamaan.
 ```mermaid
 flowchart TD
     handleForwardStart(["handle_forward(perception)"])
@@ -202,6 +204,10 @@ flowchart TD
 
 #### eteen ajo hitaasti
 
+Funktiossa ajetaan hitaasti eteenpäin jos este on lähellä. Jos taas este on suoraan edessä niin pysähdytään odottamaan että este poistuu. Jos este poistuu edestä niin jatketaan edellistä tilaa. 
+
+Huom! tarkista että paluu ei mene WAIT tilaan esteiden poistuessa. 
+
 ```mermaid
 flowchart TD
     handleSlowForwardStart(["handle_slow_forward(perception)"])
@@ -229,6 +235,10 @@ flowchart TD
 ---
 
 #### matka ajo
+
+funktio suorittaa tällähetkellä tehtävän että alkaa kulkemaan tavoite matkan eteen päin ja pysähtyy siihen. 
+
+HUOM! Tällä hetkellä viiveen ja pysäytys ramppien takia matka etenee yli tavoite matkan. 
 
 ```mermaid
 flowchart TD
@@ -275,7 +285,7 @@ flowchart TD
 ---
 
 #### Wait käsittely
-
+Waitin tarkoituksena on tällähetkellä että jos kohde on liian lähellä tai kameran syvyys näön ollessa käytössä syvyyttä ei saada niin automaatti tilassa robotti pysähtyy ja jää odottamaan että este poistuu kunnes kykenee jatkamaan edellistä tehtävää.
 ```mermaid
 
 flowchart TD

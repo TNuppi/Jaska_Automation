@@ -1,6 +1,89 @@
-# Jaska Automation
+# Jaska-mobiilirobotin käyttö- ja ohjaussovellus
+Jaska-mobiilirobotin käyttö- ja ohjaussovellus on kehitysvaiheessa oleva ohjelmistokokonaisuus, jonka jatkokehitys on suunniteltu projektin seuraavissa vaiheissa. Sovellus sisältää graafisen käyttöliittymän, manuaaliohjauksen sekä yksinkertaisen autonomisen toiminnon.
 
-## Rakenne
+Autonomisessa tilassa robotille annetaan kuljettava etäisyys, jonka perusteella robotti liikkuu suoraviivaisesti eteenpäin ja pysähtyy saavutettuaan määritellyn matkan.
+
+Ohjelmistokokonaisuuteen on liitetty tuki erilaisten anturitietojen lukemiselle. Tällä hetkellä robotti kykenee lukemaan vain moottoriohjaimilta saatavaa tilatietoa, mutta ohjelmistoon on rakennettu valmiit rakenteet kameran syvyystiedon, IMU-datan sekä IO-signaalien lukemista varten FastAPI-rajapintoja hyödyntäen.
+
+Lisäksi ohjelmistoon on toteutettu sensorisimulaattori, jonka avulla järjestelmän toimintoja voidaan testata ilman fyysisiä antureita. Simulaattori mahdollistaa simuloidun anturidatan lähettämisen järjestelmään FastAPI-rajapintojen kautta.
+
+## Käyttö
+Tällä hetkellä ohjelmiston käyttö edellyttää yhteyden muodostamista Jaska-mobiilirobotissa olevaan tietokoneeseen. Yhteys muodostetaan esimerkiksi SSH-yhteyden avulla, minkä jälkeen sovellus käynnistetään manuaalisesti robotin tietokoneella.
+
+Jaska yhdistyy langattomaan **Robo_Device_net_5G**-verkkoon.
+
+### Yhteyden muodostaminen
+```bash
+olliopiskelija@tietokone:~$ ssh user@192.168.123.175
+user@192.168.123.175's password: admin
+```
+### Sovelluksen käynnistäminen
+
+Ohjelma käynnistetään Jaskassa olevassa **ZEDBOX**-tietokoneessa suorittamalla seuraava komento:
+
+```bash
+user@GTW-ONX16-ubuntu:~$ jaskagui
+```
+### Käyttöliittymä
+Avaa selain laitteella, joka on samassa verkossa kuin robotti(Robo_Device_net_5G), ja siirry osoitteeseen:
+```
+ http://192.168.123.175:8080/   
+```
+(vaihtoehtoisesti: http://[robotin IP-osoite]:8080) 
+Selain avaa graafisen käyttöliittymän, jonka avulla robottia voidaan ohjata ja sen tilaa seurata.
+
+![käyttöliittymä](docs/images/gui_dash.png)
+
+> **HUOM!** 
+> Jos Modbus-väylän lukeminen ei onnistu: 
+> 1. Sammuta ohjelma. 
+> 2. Varmista, että hätäseis on kuitattu ja moottorikorteille menee virta.
+> 3. Irroita ja kytke USB mokkula uudelleen.
+> 4. käynnistä ohjelma uudellen.
+
+### Käyttö simulaattorilla
+Jos halutaan testata järjestelmän toiminnallisuutta siten, että kameran syvyys-, IMU- ja IO-tiedot ovat simuloituja, suorita seuraava komento:
+
+```bash
+user@GTW-ONX16-ubuntu:~$ sensor_sim
+========================================
+ Kamera-simulaattorin käynnistys
+========================================
+....
+....
+....
+```
+Käynnistä tämän jälkeen robottisovellus:
+```bash
+user@GTW-ONX16-ubuntu:~$ jaskagui
+```
+Avaa lopuksi toisessa terminaalissa sensor_sim_ui-käyttöliittymä, jolla voidaan syöttää simuloitua anturidataa järjestelmälle.
+
+```bash
+user@GTW-ONX16-ubuntu:~$ sensor_sim_ui
+```
+![sensor_sim_ui](docs/images/sensor_sim_ui.png)
+
+
+Sensor simulaattori voidaan sulkea suorittamalla komento:
+```bash
+user@GTW-ONX16-ubuntu:~$ sensor_sim_down
+```
+> **HUOM!**
+> Jos käyttö liittymä ei tunnista simuloituja antureita niin,
+> varmista että olet käynnistänyt simulaattorin ja *jaskagui* käyttöliittymän samassa terminaalissa.
+> varmista että ympäristö muuttujat "IMU_AVAILABLE, IO_VAILABLE ja CAMERA_AVAILABLE" on oikein
+> varmista että ympäristö muuttujilla "IMU_URL, IO_URL ja CAMERA_URL" osoitteet on oikein.
+> muuttujat voi varmistaa esimerkiksi komennolla:
+```bash 
+user@GTW-ONX16-ubuntu:~$ echo $CAMERA_AVAILABLE
+```
+> tämän jälkeen pitäisi tulla vastaus
+```bash 
+1
+```
+
+## Ohjelmiston rakenne
 
 Ohjelma jaetaan yhteen pääohjelmaan ja kymmeneen aliohjelmaan, sekä GUI kokonaisuuteen.
 
@@ -16,15 +99,15 @@ Ohjelma jaetaan yhteen pääohjelmaan ja kymmeneen aliohjelmaan, sekä GUI kokon
 * [ModbusDriver.py](docs/ModbusDriver.md)
 * [modbus_worker.py](docs/modbus_worker.md)
 
-- **gui/**
+- [**gui/**](docs/GUI.md)
     - \_\_init\_\_.py
-    - app.py
+    - [app.py](docs/GUI.md#apppy)
     - **pages/**
-        - dashboard.py
-        - config.py
-        - control.py
-        - errors.py
-        - state.py (*ei käytössä*) 
+        - [dashboard.py](docs/GUI.md#dashboardpy)
+        - [config.py](docs/GUI.md#configpy)
+        - [control.py](docs/GUI.md#controlpy)
+        - [errors.py](docs/GUI.md#errorspy)
+        - [state.py](docs/GUI.md#statepy) (*ei käytössä*) 
         
 ### lyhyesti
 #### main.py

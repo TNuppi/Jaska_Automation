@@ -29,9 +29,9 @@ CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE sekä CAMERA_URL, IO_URL ja IMU_UR
 ympäristö muuttujat määritellään hostissa samassa terminaalissa jossa ohjelma ajetaan esim.
 
 ```bash
-export CAMERA_AVAILABLE=1
-export CAMERA_URL="http://localhost:8000/depth"
-jaskagui
+user@GTW-ONX16-ubuntu:~$ export CAMERA_AVAILABLE=1
+user@GTW-ONX16-ubuntu:~$ export CAMERA_URL="http://localhost:8000/depth"
+user@GTW-ONX16-ubuntu:~$ jaskagui
 ```
 ## Moottorien määritys
 

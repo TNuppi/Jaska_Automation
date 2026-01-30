@@ -43,7 +43,9 @@ MAX_PULSES on testattu että kuinka monta pulssia tulee kun moottoria pyöritet�
 
 ## Nopeuksien määritykset
 
-MAX_RPS on vakio maksimi kierrokset sekunnissa, joka on laskettu kaavalla $$N_{max}=\frac{N_{maxp}}{N_{pp}} $$
+MAX_RPS on vakio maksimi kierrokset sekunnissa, joka on laskettu kaavalla 
+
+$$N_{max}=\frac{N_{maxp}}{N_{pp}}$$
 
 jossa
 
@@ -55,7 +57,9 @@ ${N_{pp}}$ = POLE_PARES
 
 MAX_RPM vakio on laskettu MAX_RPS vakiosta
 
-Kun tiedetään maksimi kierrosnopeus vodaan laskea maksimi lineaarinopeus MAX_LINEAR_SPEED kaavalla $$v_{max}= \pi D_{wheel} N_{max} $$
+Kun tiedetään maksimi kierrosnopeus vodaan laskea maksimi lineaarinopeus MAX_LINEAR_SPEED kaavalla 
+
+$$v_{max}= \pi D_{wheel} N_{max}$$
 
 MAX_ANGULAR_SPEED on vain arvioitu eikä perustu mihinkään todellisuuteen.
 
@@ -68,6 +72,17 @@ Vakio nopeudet alustetaan ja niitä pystytään vaihtamaan guissa.
 ## Debug määritykset
 
 muuttamalla debug vakiot Falsesta Trueksi saadaan konsoliin erillaisia debug tulosteita silloin kun selvitetään vikaa. Debug tulosteita voidaan lisätä koodiin esim.
+### robor_config.py
+```python
+...
+...
+DEBUG_SENSOR_VALUES = True
+...
+...
+```
+
+
+### sensors.py
 
 ```python
 import logging
@@ -87,5 +102,6 @@ tänne lisätään kaikki parametrit joita pystytään muuttamaan guissa.
 
 ## load_config() funktio
 
-lataa konfiguration tiedoston jos sellainen on saatavilla. mutta jos semmoista ei ole niin sitten se luodaan oletus arvoilla. 
+lataa konfiguration tiedoston jos sellainen on saatavilla. mutta jos semmoista ei ole niin sitten se luodaan oletus arvoilla. Konfiguraatio tiedosto on sitä varten jotta voidaan
+muokata haluttuja arvoja suoraan guista muokkaamatta varsinaista koodia ja sammuttamatta ohjelmaa. 
 

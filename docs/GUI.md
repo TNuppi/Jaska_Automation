@@ -7,7 +7,20 @@ GUI koostuu useista moduuleista, joista kukin vastaa omasta näkymästään ja t
 
 ---
 
-## app.py
+## gui/__init__.py
+
+Vastaa **GUI-paketin julkisesta rajapinnasta** ja toimii paketin sisäänrakennetun käyttöliittymäfunktion esittelijänä.  
+Moduuli huolehtii:
+
+- `start_gui`-funktion tuomisesta suoraan paketin tasolle.
+- Paketin dokumentaation (docstring) esittelystä, joka kertoo, että kyseessä on **robotin graafinen käyttöliittymä**.
+- Rajaa paketin julkisen rajapinnan määrittelemällä:
+
+```python
+__all__ = ["start_gui"]
+
+```
+## gui/app.py
 
 Vastaa käyttöliittymän käynnistämisestä ja sovelluksen yleisestä rakenteesta.  
 Moduuli huolehtii:
@@ -18,14 +31,14 @@ Moduuli huolehtii:
 
 ---
 
-## config.py
+## gui/pages/config.py
 
 Vastaa **Config**-sivun toiminnallisuudesta.  
 Sivulla voidaan muokata ohjelman toimintaan vaikuttavia vakionopeuksia ja muita asetuksia ohjelman ollessa käynnissä.
 
 ---
 
-## control.py
+## gui/pages/control.py
 
 Vastaa **Control**-sivusta.  
 Sivulla voidaan valita robotin ohjaustila:
@@ -41,7 +54,7 @@ Sivulla voidaan valita robotin ohjaustila:
 
 ---
 
-## dashboard.py
+## gui/pages/dashboard.py
 
 Vastaa **Dashboard**-sivusta, joka näyttää robotin tilatietoja reaaliajassa.  
 Sivulla esitetään muun muassa:
@@ -54,14 +67,14 @@ Sivulla esitetään muun muassa:
 
 ---
 
-## errors.py
+## gui/pages/errors.py
 
 Vastaa **Errors**-sivusta.  
 Sivulla näytetään järjestelmän havaitsemat virhe- ja varoitustilat.
 
 ---
 
-## state.py
+## gui/pages/state.py
 
 Vastaa **State**-sivusta.  
 Tämä sivu ei ole tällä hetkellä käytössä.

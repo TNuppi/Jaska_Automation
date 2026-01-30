@@ -62,7 +62,7 @@ Selain avaa graafisen käyttöliittymän, jonka avulla robottia voidaan ohjata j
 > **HUOM!** 
 > Jos Modbus-väylän lukeminen ei onnistu: 
 > 1. Sammuta ohjelma. 
-> 2. Varmista, että hätäseis on kuitattu ja moottorikorteille menee virta.
+> 2. Varmista, että hätäseis on kuitattu ja että moottorikorteille menee virtaa.
 > 3. Irroita ja kytke USB mokkula uudelleen.
 > 4. käynnistä ohjelma uudellen.
 
@@ -128,14 +128,14 @@ Ohjelma jaetaan yhteen pääohjelmaan ja kymmeneen aliohjelmaan, sekä GUI kokon
 * [modbus_worker.py](docs/modbus_worker.md)
 
 - [**gui/**](docs/GUI.md)
-    - \_\_init\_\_.py
-    - [app.py](docs/GUI.md#apppy)
+    - [\_\_init\_\_.py](docs/GUI.md#guiinitpy)
+    - [app.py](docs/GUI.md#guiapppy)
     - **pages/**
-        - [dashboard.py](docs/GUI.md#dashboardpy)
-        - [config.py](docs/GUI.md#configpy)
-        - [control.py](docs/GUI.md#controlpy)
-        - [errors.py](docs/GUI.md#errorspy)
-        - [state.py](docs/GUI.md#statepy) (*ei käytössä*) 
+        - [dashboard.py](docs/GUI.md#guipagesdashboardpy)
+        - [config.py](docs/GUI.md#guipagesconfigpy)
+        - [control.py](docs/GUI.md#guipagescontrolpy)
+        - [errors.py](docs/GUI.md#guipageserrorspy)
+        - [state.py](docs/GUI.md#guipagesstatepy) (*ei käytössä*) 
         
 ### lyhyesti
 #### main.py

@@ -11,6 +11,21 @@ Lisäksi ohjelmistoon on toteutettu sensorisimulaattori, jonka avulla järjestel
 Tällä hetkellä ohjelmiston käyttö edellyttää yhteyden muodostamista Jaska-mobiilirobotissa olevaan tietokoneeseen. Yhteys muodostetaan esimerkiksi SSH-yhteyden avulla, minkä jälkeen sovellus käynnistetään manuaalisesti robotin tietokoneella.
 
 Jaska yhdistyy langattomaan **Robo_Device_net_5G**-verkkoon.
+### Käynnistys
+Käännä Jaskan peräpanelissa sijaitseva pääkytkin (**MAIN SWITCH**) asentoon **ON**.  
+Tämän jälkeen:
+
+1. **BATTERY 3 VOLTAGE** -mittariin ilmestyy jännite.
+2. Reset-painikkeeseen syttyy merkkivalo.
+3. Paina reset-painiketta. Tämä kuittaa hätäseis-piirin ja kytkee jännitteen moottorikorteille.
+
+![Peräpaneli](docs/images/Jaska_peräpaneli.jpeg)
+
+Kun tietokone on käynnistynyt, robotti on käyttövalmis.
+
+> **HUOM!**  
+> Ohjelmistossa on havaittu pieni ongelma USB-laitteiden alustuksessa.  
+> Suositellaan, että tietokoneen käynnistyksen jälkeen USB-laitteet irrotetaan ja kytketään uudelleen.
 
 ### Yhteyden muodostaminen
 ```bash

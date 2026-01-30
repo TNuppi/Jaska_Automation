@@ -8,16 +8,20 @@ Ohjelmistokokonaisuuteen on liitetty tuki erilaisten anturitietojen lukemiselle.
 Lisäksi ohjelmistoon on toteutettu sensorisimulaattori, jonka avulla järjestelmän toimintoja voidaan testata ilman fyysisiä antureita. Simulaattori mahdollistaa simuloidun anturidatan lähettämisen järjestelmään FastAPI-rajapintojen kautta.
 
 ## Käyttö
-Tällä hetkellä ohjelmiston käyttö edellyttää yhteyden muodostamista Jaska-mobiilirobotissa olevaan tietokoneeseen. Yhteys muodostetaan esimerkiksi SSH-yhteyden avulla, minkä jälkeen sovellus käynnistetään manuaalisesti robotin tietokoneella.
+Tällä hetkellä ohjelmiston käyttö edellyttää yhteyden muodostamista Jaska-mobiilirobotissa olevaan tietokoneeseen. Yhteys voidaan muodostaa esimerkiksi SSH-yhteyden avulla, minkä jälkeen sovellus käynnistetään manuaalisesti robotin tietokoneella.
 
-Jaska yhdistyy langattomaan **Robo_Device_net_5G**-verkkoon.
+Jaska yhdistyy langattomaan **Robo_Device_net_5G** -verkkoon.
+
+---
+
 ### Käynnistys
-Käännä Jaskan peräpanelissa sijaitseva pääkytkin (**MAIN SWITCH**) asentoon **ON**.  
+Käännä Jaskan peräpanelissa sijaitseva pääkytkin (**MAIN SWITCH**) asentoon **ON**.
 Tämän jälkeen:
 
 1. **BATTERY 3 VOLTAGE** -mittariin ilmestyy jännite.
-2. Reset-painikkeeseen syttyy merkkivalo.
-3. Paina reset-painiketta. Tämä kuittaa hätäseis-piirin ja kytkee jännitteen moottorikorteille.
+2. Varmista, että hätäseis-painike (**E-STOP**) on vapautettu.
+3. Reset-painikkeeseen syttyy merkkivalo.
+4. Paina reset-painiketta. Tämä kuittaa hätäseis-piirin ja kytkee jännitteen moottorikorteille.
 
 ![Peräpaneli](docs/images/Jaska_peräpaneli.jpeg)
 
@@ -27,7 +31,11 @@ Kun tietokone on käynnistynyt, robotti on käyttövalmis.
 > Ohjelmistossa on havaittu pieni ongelma USB-laitteiden alustuksessa.  
 > Suositellaan, että tietokoneen käynnistyksen jälkeen USB-laitteet irrotetaan ja kytketään uudelleen.
 
+---
+
 ### Yhteyden muodostaminen
+Yhteys robotin tietokoneeseen muodostetaan esimerkiksi seuraavasti:
+
 ```bash
 olliopiskelija@tietokone:~$ ssh user@192.168.123.175
 user@192.168.123.175's password: admin
@@ -39,6 +47,8 @@ Ohjelma käynnistetään Jaskassa olevassa **ZEDBOX**-tietokoneessa suorittamall
 ```bash
 user@GTW-ONX16-ubuntu:~$ jaskagui
 ```
+---
+
 ### Käyttöliittymä
 Avaa selain laitteella, joka on samassa verkossa kuin robotti(Robo_Device_net_5G), ja siirry osoitteeseen:
 ```
@@ -55,6 +65,8 @@ Selain avaa graafisen käyttöliittymän, jonka avulla robottia voidaan ohjata j
 > 2. Varmista, että hätäseis on kuitattu ja moottorikorteille menee virta.
 > 3. Irroita ja kytke USB mokkula uudelleen.
 > 4. käynnistä ohjelma uudellen.
+
+---
 
 ### Käyttö simulaattorilla
 Jos halutaan testata järjestelmän toiminnallisuutta siten, että kameran syvyys-, IMU- ja IO-tiedot ovat simuloituja, suorita seuraava komento:
@@ -97,6 +109,7 @@ user@GTW-ONX16-ubuntu:~$ echo $CAMERA_AVAILABLE
 ```bash 
 1
 ```
+---
 
 ## Ohjelmiston rakenne
 

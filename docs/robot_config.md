@@ -24,7 +24,7 @@ config -- MOTOR_IDS<br/> DEBUG_MODBUS --> worker
 
 ```
 ## Device availability ja URLs
-CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE sekä CAMERA_URL,IO_URL ja IMU_URL  vakiot katsotaan järjestelmän ympäristö muuttujista jos niitä ei ole saatavilla niin oletetaan että laitteet ei ole käytössä.
+CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE sekä CAMERA_URL, IO_URL ja IMU_URL  vakiot katsotaan järjestelmän ympäristö muuttujista jos niitä ei ole saatavilla niin oletetaan että laitteet ei ole käytössä.
 
 ympäristö muuttujat määritellään hostissa samassa terminaalissa jossa ohjelma ajetaan esim.
 
@@ -67,7 +67,7 @@ MAX_SPEED_VALUE on maksimi arvo joka annetaan moottori kortille voi olla jokin t
 
 Muttamalla MAX_LINEAR_SPEED:ä tai MAX_ANGULAR_SPEED:ä ei voida varsinaisesti vaikuttaa robotin todelliseen nopeuteen, vaan nämä vaikuttaa nopeus ohjeen skaalaukseen.
 
-Vakio nopeudet alustetaan ja niitä pystytään vaihtamaan guissa.
+Vakio nopeudet (_DEFAULT_LINEAR_SPEED, _DEFAULT_ANGULAR_SPEED) alustetaan ja niitä pystytään vaihtamaan guissa.
 
 ## Debug määritykset
 

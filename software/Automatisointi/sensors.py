@@ -1,0 +1,127 @@
+"""
+sensors.py
+
+Luonut Tero Nikkola yhdessä ChatGPT-5 mini:n kanssa.
+
+Tämän moduulin tehtävä:
+- Lukea sensoridataa eri lähteistä (Modbus, HTTP, tms.) 
+- Kerätä yhteen data ja palauttaa SensorData-muodossa
+
+Huom: sensori data on raakaa, ei suodatettua tai käsiteltyä
+"""
+
+from robot_types import SensorData
+from robot_config import CAMERA_AVAILABLE, IMU_AVAILABLE, IO_AVAILABLE, MODBUS_AVAILABLE, DEBUG_SENSOR_VALUES
+from robot_config import CAMERA_URL, IO_URL, IMU_URL
+from modbus_worker import modbus_worker
+import requests
+import logging
+import os
+
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if DEBUG_SENSOR_VALUES else logging.INFO)
+
+# --- Kameran syvyysdatan luku ---
+def read_camera_depth():
+    if not CAMERA_AVAILABLE:
+        logger.debug("Camera not available")
+        return "inf", "inf", "inf"
+    try:
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+        r = requests.get(CAMERA_URL, timeout=0.05)
+        data = r.json()
+        return data["left"], data["center"], data["right"]
+    except Exception as e:
+        logger.error(f"Camera read failed: {e}")
+
+        return None, None, None
+
+# --- IMU-datan luku ---
+def read_IMU():
+    if not IMU_AVAILABLE:
+        logger.debug("IMU not available")
+        return None, None, None
+    
+    try:
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+        r = requests.get(IMU_URL , timeout=0.05)  
+        data = r.json()
+        logger.debug(f'roll deg: {data["roll_deg"]}, pitch deg: {data["pitch_deg"]}')
+        # MTi-7 antaa roll, pitch, yaw → mapataan x,y,z
+        return (
+            data["roll_deg"],   # x = roll
+            data["pitch_deg"],  # y = pitch  
+            data["yaw_deg"],     # z = yaw/heading
+            
+        )
+    except Exception as e:
+        logger.error(f"IMU read failed: {e}")
+        return None, None, None
+
+# --- Moottori ohjaimien luku --- 
+def safe_motor_freq(motor_id):
+    if not MODBUS_AVAILABLE:
+        return None
+    data = modbus_worker.get_status(motor_id)
+    logger.debug(f"Motor {motor_id} frequency: {data.get('frequency_Hz') if data else 'N/A'}")
+
+    return data.get("frequency_Hz") if data else None
+
+def safe_motor_voltage(motor_id: int) -> float | None:
+    """Palauttaa moottorin jännitteen tai None, jos dataa ei ole saatavilla."""
+    if not MODBUS_AVAILABLE:
+        return None
+
+    data = modbus_worker.get_status(motor_id)
+    voltage = data.get("voltage_V") if data else None
+    logger.debug(f"Motor {motor_id} voltage: {voltage if voltage is not None else 'N/A'}")
+    return voltage
+
+# --- IO-datan luku ---
+def read_IO_data():
+    if not IO_AVAILABLE:
+        logger.debug("IO not available")
+        return 1, 0, 0, 0, 0
+    try:
+        # TODO: tee oikea luku nyt oletetaan että luetaan FAST apin lähettämää dataa
+        r = requests.get(IO_URL, timeout=0.05)
+        data = r.json()
+        return data["IO1"], data["IO2"], data["IO3"], data["IO4"],data["IO5"]
+    except Exception as e:
+        logger.error(f"Camera read failed: {e}")
+        return 0, 0, 0, 0, 0  
+
+
+def read_sensors() -> SensorData:
+    motor1_freg = safe_motor_freq(1)
+    motor3_freg = safe_motor_freq(3)
+    motor4_freg = safe_motor_freq(4)
+    motor6_freg = safe_motor_freq(6)
+
+    battery1_voltage = safe_motor_voltage(1)
+    battery2_voltage = safe_motor_voltage(4)
+
+    cam_left, cam_center, cam_right = read_camera_depth()
+    imu_x, imu_y, imu_z  = read_IMU()
+
+    return SensorData(
+        motor1_measured_freq=motor1_freg,
+        motor3_measured_freq=motor3_freg,
+        motor4_measured_freq=motor4_freg,
+        motor6_measured_freq=motor6_freg,
+        battery1_voltage=battery1_voltage,
+        battery2_voltage=battery2_voltage,
+        cam_measured_depth_left=cam_left,
+        cam_measured_depth_center=cam_center,
+        cam_measured_depth_right=cam_right,
+        IMU_heading_x=imu_x,
+        IMU_heading_y=imu_y,
+        IMU_heading_z=imu_z,
+        IO_data_1=read_IO_data()[0],
+        IO_data_2=read_IO_data()[1],
+        IO_data_3=read_IO_data()[2],
+        IO_data_4=read_IO_data()[3],
+        IO_data_5=read_IO_data()[4],
+    )

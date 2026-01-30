@@ -23,7 +23,7 @@ Tämän jälkeen:
 3. Reset-painikkeeseen syttyy merkkivalo.
 4. Paina reset-painiketta. Tämä kuittaa hätäseis-piirin ja kytkee jännitteen moottorikorteille.
 
-![Peräpaneli](docs/images/Jaska_peräpaneli.jpeg)
+![Peräpaneli](media/photos/Jaska_peräpaneli.jpeg)
 
 Kun tietokone on käynnistynyt, robotti on käyttövalmis.
 
@@ -57,7 +57,7 @@ Avaa selain laitteella, joka on samassa verkossa kuin robotti(Robo_Device_net_5G
 (vaihtoehtoisesti: http://[robotin IP-osoite]:8080) 
 Selain avaa graafisen käyttöliittymän, jonka avulla robottia voidaan ohjata ja sen tilaa seurata.
 
-![käyttöliittymä](docs/images/gui_dash.png)
+![käyttöliittymä](media/photos/gui_dash.png)
 
 > **HUOM!** 
 > Jos Modbus-väylän lukeminen ei onnistu: 
@@ -89,7 +89,7 @@ Avaa lopuksi toisessa terminaalissa sensor_sim_ui-käyttöliittymä, jolla voida
 ```bash
 user@GTW-ONX16-ubuntu:~$ sensor_sim_ui
 ```
-![sensor_sim_ui](docs/images/sensor_sim_ui.png)
+![sensor_sim_ui](media/photos/sensor_sim_ui.png)
 
 
 Sensor simulaattori voidaan sulkea suorittamalla komento:

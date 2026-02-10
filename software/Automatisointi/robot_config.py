@@ -45,6 +45,8 @@ OBSTACLE_NEAR_DISTANCE = 800 # mm
 
 #moottorin speksit
 MOTOR_IDS = [1,3,4,6]
+PORTSIDE_MOTORS = [1,3] # Kulkusuuntaan katsoen vasemman puoleiset moottorit
+STARBOAD_MOTORS = [4,6] # Kulkusuuntaan katsoen oikean puoleiset moottorit
 POLES = 30 # moottorin navat
 POLE_PARES = POLES/2 #napa parit
 RPM_FACTOR = 60 /POLE_PARES 

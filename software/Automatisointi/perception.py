@@ -19,7 +19,8 @@ from robot_config import (
     OBSTACLE_MIN_DISTANCE,
     OBSTACLE_NEAR_DISTANCE,
     RPM_FACTOR,
-    DEBUG_PERCEPTION
+    DEBUG_PERCEPTION,
+    GEAR_RATIO
 )
 import math
 import logging
@@ -84,7 +85,7 @@ def calculate_motor_rpms(sensor_data: SensorData) -> dict:
         if freq is None:
             logger.warning(f"{name} frequency is None -> using 0 RPM")
             freq = 0.0
-        motor_rpms[name] = freq * RPM_FACTOR
+        motor_rpms[name] = freq * RPM_FACTOR *GEAR_RATIO
 
     return motor_rpms
 

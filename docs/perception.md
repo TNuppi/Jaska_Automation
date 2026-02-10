@@ -67,9 +67,9 @@ class H datastyle
 ---
 ### calculate_motor_rpms(SensorData) -> dict
 
-funktio laskeen kaikkien Sensoridatasta olevien moottorien kierrosnopeuden moottori ohjaimen antamasta taajuudesta
-jos taajuus on **None** niin annetaan kierrosnopeus 0.0
-kierrosnopeus lasketaan $$RPM= freg \cdot RPM\_FACTOR$$  **RPM_FACTOR** määritellään robot_config.py:ssä joka lasketaan
+Funktio laskeen kaikkien Sensoridatasta olevien moottorien kierrosnopeuden moottori ohjaimen antamasta taajuudesta
+jos taajuus on **None** niin annetaan kierrosnopeus 0.0. 
+kierrosnopeus lasketaan $$RPM= freg \cdot RPM\_FACTOR \cdot GEAR_\RATIO$$  **RPM_FACTOR** ja **GEAR_RATIO** määritellään robot_config.py:ssä joka lasketaan
 
 $$ RPM\_FACTOR = \frac {60}{n} $$
 

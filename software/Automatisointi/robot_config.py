@@ -33,7 +33,7 @@ IO_URL = os.getenv("IO_URL","http://localhost:8000/IO")
 IMU_URL = os.getenv("IMU_URL","http://localhost:8000")
 
 # Renkaan koko metreinä
-WHEEL_DIAMETER = 0.26  # m
+WHEEL_DIAMETER = 0.23  # m
 
 
 # Esteiden havaitsemisen minimi-etäisyys
@@ -47,10 +47,11 @@ OBSTACLE_NEAR_DISTANCE = 800 # mm
 MOTOR_IDS = [1,3,4,6]
 PORTSIDE_MOTORS = [1,3] # Kulkusuuntaan katsoen vasemman puoleiset moottorit
 STARBOAD_MOTORS = [4,6] # Kulkusuuntaan katsoen oikean puoleiset moottorit
-POLES = 30 # moottorin navat
+POLES = 20 # moottorin navat
 POLE_PARES = POLES/2 #napa parit
 RPM_FACTOR = 60 /POLE_PARES 
-MAX_PULSES = 165 # moottorin ohjaimen antama maxsimi pulssi arvo
+MAX_PULSES = 165 # moottorin ohjaimen antama maxsimi pulssi arvo keskimääräisesti
+GEAR_RATIO = 1/4.5 # moottorin välitys suhde.
 
 # Maksimi kierros nopeus laskettu
 MAX_RPS = MAX_PULSES/POLE_PARES

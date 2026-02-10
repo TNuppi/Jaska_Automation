@@ -54,7 +54,7 @@ MAX_PULSES = 165 # moottorin ohjaimen antama maxsimi pulssi arvo keskimääräis
 GEAR_RATIO = 1/4.5 # moottorin välitys suhde.
 
 # Maksimi kierros nopeus laskettu
-MAX_RPS = MAX_PULSES/POLE_PARES
+MAX_RPS = MAX_PULSES/POLE_PARES* GEAR_RATIO # Välitys suhde huomioitu
 MAX_RPM = MAX_RPS*60
 # Maksimi nopeus (lineaarinen)
 MAX_LINEAR_SPEED = pi*WHEEL_DIAMETER*MAX_RPS  # m/s laskettu

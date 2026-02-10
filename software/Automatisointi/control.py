@@ -13,6 +13,8 @@ from robot_config import (
     MAX_LINEAR_SPEED,
     MAX_ANGULAR_SPEED,
     MODBUS_AVAILABLE,
+    PORTSIDE_MOTORS,
+    STARBOAD_MOTORS,
 )
 from modbus_worker import modbus_worker
 import logging
@@ -71,7 +73,7 @@ def send_to_motors(motor_vals: dict[int, int]):
     """
     try:
         for motor_id, signed_speed in motor_vals.items():
-            direction, speed = speed_to_direction(signed_speed)
+            direction, speed = speed_to_direction(motor_id, signed_speed)
 
             if MODBUS_AVAILABLE:
                 modbus_worker.enqueue_set_direction(motor_id, direction)
@@ -84,12 +86,15 @@ def send_to_motors(motor_vals: dict[int, int]):
         logger.exception("Failed to send motor commands")
 
 
-def speed_to_direction(speed: int) -> tuple[int, int]:
+def speed_to_direction(motor_id:int, speed: int) -> tuple[int, int]:
     """
     Muuntaa etumerkillisen nopeuden (±) suunnaksi ja nopeudeksi.
+    Moottorin puoli huomioitu
     """
-    return (0, speed) if speed >= 0 else (1, abs(speed))
-
+    if motor_id in STARBOAD_MOTORS:
+        return (0, speed) if speed >= 0 else (1, abs(speed))
+    else:
+        return (1, speed) if speed >= 0 else (0, abs(speed))
 
 def emergency_stop():
     """

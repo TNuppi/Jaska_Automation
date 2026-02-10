@@ -22,7 +22,7 @@ echo "CAMERA_URL = $CAMERA_URL"
 # --- Käynnistä simulaattori ---
 echo ""
 echo "Käynnistetään Docker Compose (kamera-simulaattori)..."
-docker compose -f /home/user/tero_dev/docker-compose-camera_depth_sim.yml up --build -d
+docker compose -f /home/user/tero_dev/software/docker-compose-camera_depth_sim.yml up --build -d
 
 
 echo ""

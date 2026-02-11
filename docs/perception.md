@@ -69,14 +69,23 @@ class H datastyle
 
 Funktio laskeen kaikkien Sensoridatasta olevien moottorien kierrosnopeuden moottori ohjaimen antamasta taajuudesta
 jos taajuus on **None** niin annetaan kierrosnopeus 0.0. 
-kierrosnopeus lasketaan $$n= f\cdot RPM\_{FACTOR} \cdot i $$  **RPM_FACTOR** ja **GEAR_RATIO** määritellään robot_config.py:ssä joka lasketaan
+kierrosnopeus lasketaan 
 
-$$ RPM\_{FACTOR} = \frac {60}{p} $$
+$$n= f\cdot n\_{F} \cdot i $$ 
 
 missä
+
 $n =$ moottorin kierrosnopeus [1/min]
+
+$f =$ hall-pulssitaajuus [Hz]
+
+$n_F=$ RPM_FACTOR $= \frac {60}{p} $
+
 $p =$ moottorin napaparit
+
 $i =$ välistys suhde (GEAR_RATIO)
+
+**RPM_FACTOR** ja **GEAR_RATIO** määritellään robot_config.py:ssä joka lasketaan
 
 funktio palauttaa dictionaryn jossa avaimet on motor1,motor3 motor4 ja motor6.
 
@@ -87,7 +96,8 @@ HUOM! pyörimissuuntaa ei huomioda ollenkaan
 ### calculate_linear_velocity(motor_rpms: dict[str,float]) -> float:
 
 Funktio laskee lineaarinopeuden (m/s) moottoreiden kierrosnopeuksien keskiarvosta. 
-$$ velocity = \frac {RPM_{avg} \cdot \pi \cdot D_{wheel}}{60} $$
+
+$$velocity = \frac {RPM_{avg} \cdot \pi \cdot D_{wheel}}{60}$$
 
 **WHEEL_DIAMETER** määritellään robot_config.py:ssä.
 Funktio palauttaa nopeuden nopeuden floattina ja jos kierrosnopeutta ei ole saatavilla niin nopeudeksi määritellään 0.0. 
@@ -172,5 +182,6 @@ reset_button on True IO_data_2 on 1 muuten False
 muut ei ole vielä käytössä.
 
 ----
+
 
 

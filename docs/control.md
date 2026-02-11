@@ -90,40 +90,50 @@ flowchart TD
 
 #### Nopeuksien normalisointi
 
-nopeudet normalisoidaan kaavalla $$ v_{norm} = \frac {v}{v_{max}} $$
+nopeudet normalisoidaan kaavalla 
+
+$$v_{norm} = \frac {v}{v_{max}}$$
 
 jossa
 
-$v_{norm} = $ normalisoitu lineaari- tai kulmanopeus
-$v =  $ lineaari- tai kulmanopeus ohje
-$v_{max}= $ lineaari tai kulmanopeuden maximi (MAX_LINEAR_SPEED, MAX_ANGULAR_SPEED) arvo joka on määritelty robot_confic.py moduulissa.
+$v_{norm} =$ normalisoitu lineaari- tai kulmanopeus
+
+$v =$ lineaari- tai kulmanopeus ohje
+
+$v_{max}=$ lineaari tai kulmanopeuden maximi (MAX_LINEAR_SPEED, MAX_ANGULAR_SPEED) arvo joka on määritelty robot_confic.py moduulissa.
 
 Jos maks arvot ei ole saatavilla niin normalisoiduksi arvoksi määritetään 0.0
 
 #### moottori kohtaisen nopeuden laskenta
 
-Paarpuurin puoleiset moottorit lasketaan kaavalla $$C_P=(v_{norm_{L}}-v_{norm_{A}})\cdot C_{max} $$
+Paarpuurin puoleiset moottorit lasketaan kaavalla $$C_P=(v_{norm_{L}}-v_{norm_{A}})\cdot C_{max}$$
 
-ja styyrpuurin puoleiset lasketaan kaavalla $$C_S=(v_{norm_{L}}+v_{norm_{A}})\cdot C_{max} $$
+ja styyrpuurin puoleiset lasketaan kaavalla $$C_S=(v_{norm_{L}}+v_{norm_{A}})\cdot C_{max}$$
 
 jossa
 
-$C_P$ = paarpuurin puoleisten moottorien ohjauskomento
+$C_P=$ paarpuurin puoleisten moottorien ohjauskomento
 
-$C_S$ = styyrpuurin puoleisten moottorien ohjauskomento
+$C_S=$ styyrpuurin puoleisten moottorien ohjauskomento
 
-$v_{norm_{L}} $ = normalisoitu lineaarinen nopeus
+$v_{norm_{L}}=$ normalisoitu lineaarinen nopeus
 
-$v_{norm_{A}} $ = normalisoitu kulmanopeus
+$v_{norm_{A}} =$ normalisoitu kulmanopeus
 
-$C_{max} $ = moottoriohjaimelle annettavan nopeuskomennon maksimiarvo
+$C_{max} =$  moottoriohjaimelle annettavan nopeuskomennon maksimiarvo
 (vastaa MAX_SPEED_VALUE-vakioita, määritelty robot_config.py-moduulissa) 
 
 ##### Havaittu rajoite
 
 Mikäli sekä lineaarinen että kulmanopeus saavuttavat maksimiarvonsa samanaikaisesti, voi moottorikohtainen ohjauskomento ylittää sallitun maksimiarvon 
-$C_{max}$ esim⁡. $$v_{norm_{L}}=1, \quad v_{norm_{A}}=1 $$
-joka johtaa tulokseen $$C_S= 2 \cdot C{max} $$
+$C_{max}$ esim⁡. 
+
+$$v_{norm_{L}}=1, \quad v_{norm_{A}}=1$$
+
+joka johtaa tulokseen 
+
+$$C_S= 2 \cdot C_{max}$$
+
 Tällöin ohjausarvo joudutaan rajaamaan moottoriohjaimen tai alempien ohjelmistokerrosten toimesta, mikä voi aiheuttaa liikkeen suunnan vääristymistä äärimmäisissä ohjaustilanteissa.
 
 ##### Vaikutus järjestelmän toimintaan
@@ -141,8 +151,14 @@ Kuitenkin:
 
 Jatkokehityksessä ohjauskomennot voidaan skaalata yhteisesti siten, että suurin moottorikohtainen arvo ei ylitä sallittua rajaa.
 
-Yksi yleinen ratkaisu on yhteinen skaalaus: $$m = max(|v_L + v_A|, \: |v_L-v_A|) $$
-mikäli $m>1$, molemmat arvot skaalataan: $$v_{L}'=\frac {v_L}{m}, \quad v_A' =\frac {v_A}{m} $$
+Yksi yleinen ratkaisu on yhteinen skaalaus:
+
+$$m = max(|v_L + v_A|, \: |v_L-v_A|)$$
+
+mikäli $m>1$, molemmat arvot skaalataan: 
+
+$$v_{L}'=\frac {v_L}{m}, \quad v_A' =\frac {v_A}{m}$$
+
 Tämän jälkeen moottorikohtaiset ohjauskomennot lasketaan käyttäen skaalattuja arvoja.
 
 Tämä menetelmä säilyttää liikesuunnan ja estää ohjausarvojen yliohjauksen.
@@ -186,9 +202,9 @@ flowchart TD
 
     tryBlock -. Virhe .-> exceptionBlock --> logException
 ```
-### speed_to_direction(speed: int) -> tuple[int, int]
+### speed_to_direction(motor_id:int, speed: int) -> tuple[int, int]
 
-Funktio muuttaa etumerkillisen nopeuden (±) suunnaksi ja nopeudeksi. Jos nopeus on positiivista suunnaksi määritellään 0 (eteen) jos negatiivista niin 1 (taakse). 
+Funktio muuttaa etumerkillisen nopeuden (±) suunnaksi ja nopeudeksi. Jos nopeus on positiivista suunnaksi määritellään styyrpuurin puolella 0 ja paarpuurin puolella 1 (eteen) jos negatiivista niin styyrpuurin puolella 1 ja paarpuurin puolella 0 (taakse). 
 funktio palauttaa suunnan ja nopeuden absoluuttisen arvon. 
 
 ### emergency_stop():

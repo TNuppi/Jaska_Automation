@@ -69,12 +69,14 @@ class H datastyle
 
 Funktio laskeen kaikkien Sensoridatasta olevien moottorien kierrosnopeuden moottori ohjaimen antamasta taajuudesta
 jos taajuus on **None** niin annetaan kierrosnopeus 0.0. 
-kierrosnopeus lasketaan $$RPM= freg \cdot RPM\_FACTOR \cdot GEAR_\RATIO$$  **RPM_FACTOR** ja **GEAR_RATIO** määritellään robot_config.py:ssä joka lasketaan
+kierrosnopeus lasketaan $$n= f\cdot RPM\_{FACTOR} \cdot i $$  **RPM_FACTOR** ja **GEAR_RATIO** määritellään robot_config.py:ssä joka lasketaan
 
-$$ RPM\_FACTOR = \frac {60}{n} $$
+$$ RPM\_{FACTOR} = \frac {60}{p} $$
 
 missä
-$n =$ moottorin napaparit
+$n =$ moottorin kierrosnopeus [1/min]
+$p =$ moottorin napaparit
+$i =$ välistys suhde (GEAR_RATIO)
 
 funktio palauttaa dictionaryn jossa avaimet on motor1,motor3 motor4 ja motor6.
 
@@ -170,4 +172,5 @@ reset_button on True IO_data_2 on 1 muuten False
 muut ei ole vielä käytössä.
 
 ----
+
 
